@@ -1,9 +1,19 @@
 #include "Event.h"
+#include "interfaces/IResource.h"
+#include "helpers/JS.h"
 
 // clang-format off
 static js::Event gameEntityCreateEvent(alt::CEvent::Type::GAME_ENTITY_CREATE, [](const alt::CEvent* ev, js::Event::EventArgs& args)
 {
     auto e = static_cast<const alt::CGameEntityCreateEvent*>(ev);
+
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    js::IResource* resource = js::GetCurrentResource(isolate);
+
+    if (resource) {
+        resource->GetOrCreateScriptObject(isolate->GetCurrentContext(), e->GetTarget());
+    }
+
     args.Set("entity", e->GetTarget());
 });
 
