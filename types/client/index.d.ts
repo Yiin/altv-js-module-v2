@@ -203,7 +203,7 @@ declare module "@altv/client" {
 
         static readonly all: ReadonlyArray<AudioOutputFrontend>;
 
-        static create(options: AudioOutputFrontendCreateOptions): AudioOutputFrontendCreateOptions;
+        static create(options: AudioOutputFrontendCreateOptions): AudioOutputFrontend;
 
         static setFactory(factory: typeof AudioOutputFrontend): void;
         static getFactory<T extends AudioOutputFrontend>(): T;
