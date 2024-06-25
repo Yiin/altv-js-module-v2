@@ -70,7 +70,7 @@ declare module "@altv/client" {
         clearCache?: boolean; // default: true
     }
 
-    export abstract class Audio {
+    export abstract class Audio extends BaseObject {
         source: string;
         loop: boolean;
         volume: number;
