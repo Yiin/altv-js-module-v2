@@ -69,6 +69,17 @@ declare module "@altv/client" {
         radio?: boolean; // default: false
         clearCache?: boolean; // default: true
     }
+    
+    type AudioEventParametersMap = {
+        "inited": [],
+        "streamStarted": [],
+        "streamEnded": [],
+        "streamPaused": [],
+        "streamReset": [],
+        "streamSeek": [time: number]
+        "volumeChange": [vol: number]
+        "error": [code: number, message: string]
+    };
 
     export abstract class Audio extends BaseObject {
         source: string;
@@ -88,9 +99,9 @@ declare module "@altv/client" {
         reset(): void;
         seek(time: number): void;
 
-        on(eventName: string, func: (...args: unknown[]) => void): void;
-        once(eventName: string, func: (...args: unknown[]) => void): void;
-        off(eventName: string, func: (...args: unknown[]) => void): void;
+        on<E extends keyof AudioEventParametersMap>(eventName: E, func: (...args: AudioEventParametersMap[E]) => void): void;
+        once<E extends keyof AudioEventParametersMap>(eventName: E, func: (...args: AudioEventParametersMap[E]) => void): void;
+        off<E extends keyof AudioEventParametersMap>(eventName: E, func: (...args: AudioEventParametersMap[E]) => void): void;
 
         public onCreate?(opts: AudioCreateOptions): void;
         public onDestroy?(): void;
