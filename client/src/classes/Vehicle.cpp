@@ -9,6 +9,70 @@ static void HandlingGetter(js::LazyPropertyContext& ctx)
     ctx.Return(handlingClass.Create(ctx.GetContext(), vehicle));
 }
 
+static void GetWheelDynamicFlag(js::FunctionContext& ctx)
+{
+    if(!ctx.CheckThis()) return;
+    alt::IVehicle* vehicle = ctx.GetThisObject<alt::IVehicle>();
+    if(!ctx.CheckArgCount(2)) return;
+
+    int wheel;
+    if(!ctx.GetArg(0, wheel)) return;
+
+    uint32_t flag;
+    if(!ctx.GetArg(1, flag)) return;
+
+    ctx.Return(vehicle->GetWheelDynamicFlag(wheel, flag));
+}
+
+static void SetWheelDynamicFlag(js::FunctionContext& ctx)
+{
+    if(!ctx.CheckThis()) return;
+    alt::IVehicle* vehicle = ctx.GetThisObject<alt::IVehicle>();
+    if(!ctx.CheckArgCount(3)) return;
+
+    int wheel;
+    if(!ctx.GetArg(0, wheel)) return;
+
+    uint32_t flag;
+    if(!ctx.GetArg(1, flag)) return;
+
+    bool value;
+    if(!ctx.GetArg(2, value)) return;
+    vehicle->SetWheelDynamicFlag(wheel, flag, value);
+}
+
+static void GetWheelConfigFlag(js::FunctionContext& ctx)
+{
+    if(!ctx.CheckThis()) return;
+    alt::IVehicle* vehicle = ctx.GetThisObject<alt::IVehicle>();
+    if(!ctx.CheckArgCount(2)) return;
+
+    int wheel;
+    if(!ctx.GetArg(0, wheel)) return;
+
+    uint32_t flag;
+    if(!ctx.GetArg(1, flag)) return;
+
+    ctx.Return(vehicle->GetWheelConfigFlag(wheel, flag));
+}
+
+static void SetWheelConfigFlag(js::FunctionContext& ctx)
+{
+    if(!ctx.CheckThis()) return;
+    alt::IVehicle* vehicle = ctx.GetThisObject<alt::IVehicle>();
+    if(!ctx.CheckArgCount(3)) return;
+
+    int wheel;
+    if(!ctx.GetArg(0, wheel)) return;
+
+    uint32_t flag;
+    if(!ctx.GetArg(1, flag)) return;
+
+    bool value;
+    if(!ctx.GetArg(2, value)) return;
+    vehicle->SetWheelConfigFlag(wheel, flag, value);
+}
+
 static void GetByScriptID(js::FunctionContext& ctx)
 {
     if(!ctx.CheckArgCount(1)) return;
@@ -69,8 +133,14 @@ extern js::Class vehicleClass("Vehicle", &sharedVehicleClass, nullptr, [](js::Cl
     tpl.Method<&alt::IVehicle::SetWheelRimRadius>("setWheelRimRadius");
     tpl.Method<&alt::IVehicle::GetWheelTyreWidth>("getWheelTyreWidth");
     tpl.Method<&alt::IVehicle::SetWheelTyreWidth>("setWheelTyreWidth");
+    tpl.Method<&alt::IVehicle::GetWheelDynamicFlag>("getWheelDynamicFlag");
+    tpl.Method<&alt::IVehicle::SetWheelDynamicFlag>("setWheelDynamicFlag");
+    tpl.Method<&alt::IVehicle::GetWheelConfigFlag>("getWheelConfigFlag");
+    tpl.Method<&alt::IVehicle::SetWheelConfigFlag>("setWheelConfigFlag");
     tpl.Method<&alt::IVehicle::GetWheelSurfaceMaterial>("getWheelSurfaceMaterial");
     tpl.Method<&alt::IVehicle::ResetDashboardLights>("resetDashboardLights");
+
+    tpl.Method<&alt::IVehicle::SetupTransmission>("setupTransmission");
 
     tpl.GetByID<alt::IBaseObject::Type::VEHICLE>();
     tpl.GetByRemoteID<alt::IBaseObject::Type::VEHICLE>();
