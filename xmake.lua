@@ -47,8 +47,8 @@ rule("generate-bindings")
 rule("update-deps")
     on_load(function(target)
         if not has_config("auto-update-deps") then return end
-        import("core.project.config")
-        os.iorun("node tools/update-deps.js " .. target:name() .. " " .. tostring(config.get("mode")))
+        -- import("core.project.config")
+        -- os.iorun("node tools/update-deps.js " .. target:name() .. " " .. tostring(config.get("mode")))
     end)
 
 -- Targets
