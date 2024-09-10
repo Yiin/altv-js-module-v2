@@ -10,7 +10,7 @@ class CJavaScriptRuntime : public js::IRuntime<CJavaScriptRuntime, CJavaScriptRe
     std::unique_ptr<v8::Platform> platform;
 
     static void OnFatalError(const char* location, const char* message);
-    static void OnHeapOOM(const char* location, bool isHeap);
+    static void OnHeapOOM(const char* location, const v8::OOMDetails& details);
     static size_t OnNearHeapLimit(void*, size_t current, size_t initial);
     static void OnPromiseRejected(v8::PromiseRejectMessage message);
     static v8::MaybeLocal<v8::Promise> ImportModuleDynamically(
