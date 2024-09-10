@@ -57,7 +57,7 @@ void CNodeRuntime::OnTick()
 std::vector<std::string> CNodeRuntime::GetNodeArgs()
 {
     // https://nodejs.org/docs/latest-v22.x/api/cli.html#options
-    std::vector<std::string> args = { "--trace-warnings" };
+    std::vector<std::string> args = { "--trace-warnings", "--expose-internals" };
 
     Config::Value::ValuePtr moduleConfig = alt::ICore::Instance().GetServerConfig()["js-module-v2"];
     if(!moduleConfig->IsDict()) return args;
