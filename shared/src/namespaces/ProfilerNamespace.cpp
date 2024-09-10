@@ -53,10 +53,10 @@ public:
         return js::IResource::GetFromContext(context) == resource;
     }
 
-    void MeasurementComplete(const std::vector<std::pair<v8::Local<v8::Context>, size_t>>& context_sizes_in_bytes, size_t unattributed_size_in_bytes) override
+    void MeasurementComplete(v8::MeasureMemoryDelegate::Result result) override
     {
-        size_t size = context_sizes_in_bytes[0].second;
-        resource->PushNextTickCallback([=]() { this->callback(size, unattributed_size_in_bytes); });
+        size_t size = result.sizes_in_bytes[0];
+        resource->PushNextTickCallback([=]() { this->callback(size, result.unattributed_size_in_bytes); });
     }
 };
 

@@ -132,7 +132,7 @@ namespace js
 
             Class* obj = ctx.GetThisObject<Class>();
             if (!obj) return;
-            
+
             ctx.Return((obj->*Getter)());
         }
         template<auto Setter>
@@ -431,7 +431,7 @@ namespace js
         template<auto Getter>
         void Property(const std::string& name)
         {
-            Get()->PrototypeTemplate()->SetAccessor(js::JSValue(name), Wrapper::PropertyGetterHandler<Getter>, nullptr, v8::Local<v8::Value>(), v8::DEFAULT, v8::ReadOnly);
+            Get()->PrototypeTemplate()->SetAccessor(js::JSValue(name), Wrapper::PropertyGetterHandler<Getter>, nullptr, v8::Local<v8::Value>(), v8::ReadOnly);
         }
 
         template<auto Getter, auto Setter>

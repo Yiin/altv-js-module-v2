@@ -4,9 +4,13 @@
 bool CNodeRuntime::Initialize()
 {
     std::vector<std::string> args = GetNodeArgs();
-    std::unique_ptr<node::InitializationResult> result =
-      node::InitializeOncePerProcess(args, { node::ProcessInitializationFlags::kNoInitializeV8, node::ProcessInitializationFlags::kNoInitializeNodeV8Platform });
-    if(result->errors().size() > 0)
+    std::shared_ptr<node::InitializationResult> result =
+      node::InitializeOncePerProcess(args, {
+          node::ProcessInitializationFlags::kNoInitializeV8,
+          node::ProcessInitializationFlags::kNoInitializeNodeV8Platform
+      });
+
+    if (!result->errors().empty())
     {
         for(const std::string& error : result->errors())
         {
@@ -16,12 +20,13 @@ bool CNodeRuntime::Initialize()
     }
 
     platform = node::MultiIsolatePlatform::Create(4);
-    if(!platform) return false;
+    if (!platform) return false;
+
     v8::V8::InitializePlatform(platform.get());
     v8::V8::Initialize();
 
     isolate = node::NewIsolate(node::CreateArrayBufferAllocator(), uv_default_loop(), platform.get());
-    if(!isolate) return false;
+    if (!isolate) return false;
 
     {
         v8::Locker locker(isolate);
@@ -51,7 +56,7 @@ void CNodeRuntime::OnTick()
 
 std::vector<std::string> CNodeRuntime::GetNodeArgs()
 {
-    // https://nodejs.org/docs/latest-v18.x/api/cli.html#options
+    // https://nodejs.org/docs/latest-v22.x/api/cli.html#options
     std::vector<std::string> args = { "--trace-warnings" };
 
     Config::Value::ValuePtr moduleConfig = alt::ICore::Instance().GetServerConfig()["js-module-v2"];
