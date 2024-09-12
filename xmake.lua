@@ -105,6 +105,7 @@ target("client")
         set_kind("static")
     else
         set_kind("shared")
+        add_defines("ALTV_JSV2_SHARED")
     end
     add_files("client/src/**.cpp", "shared/src/**.cpp")
     add_headerfiles("client/src/**.h")
