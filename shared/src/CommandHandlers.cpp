@@ -53,9 +53,9 @@ void js::DebugHandlesCommand(js::CommandArgs&)
         v8::HandleScope scope(isolate);
         v8::Isolate::Scope isolateScope(isolate);
 
-        HandleVisitor visitor(resource);
-        resource->GetIsolate()->VisitHandlesWithClassIds(&visitor);
-        visitor.Dump();
+        // HandleVisitor visitor(resource);
+        // resource->GetIsolate()->VisitHandlesWithClassIds(&visitor);
+        // visitor.Dump();
     }
 }
 
@@ -113,9 +113,9 @@ void js::DumpBuffersCommand(js::CommandArgs&)
         v8::HandleScope scope(isolate);
         v8::Isolate::Scope isolateScope(isolate);
 
-        HandleVisitor visitor(resource);
-        resource->GetIsolate()->VisitWeakHandles(&visitor);
-        visitor.Dump();
+        // HandleVisitor visitor(resource);
+        // resource->GetIsolate()->VisitWeakHandles(&visitor);
+        // visitor.Dump();
     }
 }
 

@@ -103,7 +103,7 @@ namespace js
 
         bool CheckExtraInternalFieldJSValue()
         {
-            return Check(!info.This()->GetInternalField(1)->IsNullOrUndefined(), "Invalid extra internal field value");
+            return Check(!info.This()->GetInternalField(1).As<v8::Value>()->IsNullOrUndefined(), "Invalid extra internal field value");
         }
 
         v8::Local<v8::Object> GetThis()
@@ -131,7 +131,7 @@ namespace js
         {
             if(errored) return {};
             if(info.This()->InternalFieldCount() != 2) return {};
-            std::optional<T> value = CppValue<T>(info.This()->GetInternalField(1));
+            std::optional<T> value = CppValue<T>(info.This()->GetInternalField(1).As<v8::Value>());
             if(!value.has_value()) return T{};
             return value.value();
         }

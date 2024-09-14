@@ -10,13 +10,16 @@ void js::Wrapper::DynamicPropertyLazyHandler(v8::Local<v8::Name> property, const
     DynamicPropertyGetterContext ctx{ info, property };
 
     js::ClassTemplate::DynamicPropertyData* data = static_cast<ClassTemplate::DynamicPropertyData*>(info.Data().As<v8::External>()->Value());
-    v8::NamedPropertyHandlerConfiguration config;
-    config.getter = Wrapper::DynamicPropertyGetterHandler;
-    if(data->setter) config.setter = Wrapper::DynamicPropertySetterHandler;
-    if(data->deleter) config.deleter = Wrapper::DynamicPropertyDeleterHandler;
-    if(data->enumerator) config.enumerator = Wrapper::DynamicPropertyEnumeratorHandler;
-    config.flags = v8::PropertyHandlerFlags::kOnlyInterceptStrings;
-    config.data = v8::External::New(ctx.GetIsolate(), data);
+    v8::NamedPropertyHandlerConfiguration config {
+        Wrapper::DynamicPropertyGetterHandler,
+        data->setter ? Wrapper::DynamicPropertySetterHandler : nullptr,
+        nullptr,
+        data->deleter ? Wrapper::DynamicPropertyDeleterHandler : nullptr,
+        data->enumerator ? Wrapper::DynamicPropertyEnumeratorHandler : nullptr,
+        nullptr, nullptr,
+        v8::External::New(ctx.GetIsolate(), data),
+        v8::PropertyHandlerFlags::kOnlyInterceptStrings
+    };
 
     v8::Local<v8::Context> context = ctx.GetIsolate()->GetCurrentContext();
     v8::Local<v8::ObjectTemplate> tpl = v8::ObjectTemplate::New(ctx.GetIsolate());
