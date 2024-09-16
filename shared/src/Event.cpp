@@ -4,15 +4,19 @@
 
 extern js::Class eventContextClass, cancellableEventContextClass;
 
-js::Promise js::Event::CallEventBinding(bool custom, int type, EventArgs& args, IResource* resource)
+std::optional<js::Promise> js::Event::CallEventBinding(bool custom, int type, EventArgs& args, IResource* resource)
 {
-    v8::Isolate* isolate = resource->GetIsolate();
-    v8::Local<v8::Context> context = resource->GetContext();
     js::Function onEvent = resource->GetBindingExport<v8::Function>(BindingExport::ON_EVENT);
-    if(!onEvent.IsValid()) return js::Promise{ v8::Local<v8::Promise>() };
+    if (!onEvent.IsValid())
+        return std::nullopt;
 
     std::optional<v8::Local<v8::Value>> result = onEvent.Call<v8::Local<v8::Value>>(custom, type, args.Get());
-    return js::Promise{ result.value_or(v8::Local<v8::Value>()).As<v8::Promise>() };
+    auto promise = js::Promise{ result.value_or(v8::Local<v8::Value>()).As<v8::Promise>() };
+
+    if (!promise.Get().IsEmpty())
+        return promise;
+
+    return std::nullopt;
 }
 
 void js::Event::SendEvent(const alt::CEvent* ev, IResource* resource)
@@ -21,13 +25,19 @@ void js::Event::SendEvent(const alt::CEvent* ev, IResource* resource)
     if(!eventHandler) return;
 
     EventArgs eventArgs;
-    if(ev->IsCancellable()) eventArgs = cancellableEventContextClass.Create(resource->GetContext(), (void*)ev);
+    if(ev->IsCancellable())
+        eventArgs = cancellableEventContextClass.Create(resource->GetContext(), (void*)ev);
     else
         eventArgs = eventContextClass.Create(resource->GetContext(), (void*)ev);
 
     eventHandler->argsCb(ev, eventArgs);
 
-    CallEventBinding(false, (int)ev->GetType(), eventArgs, resource);
+    auto promise = CallEventBinding(false, (int)ev->GetType(), eventArgs, resource);
+    if (promise.has_value() && ev->GetType() == alt::CEvent::Type::RESOURCE_STOP && resource->GetResource() == static_cast<const alt::CResourceStopEvent*>(ev)->GetResource())
+    {
+        promise->Await();
+    }
+
     eventArgs.Get()->SetAlignedPointerInInternalField(1, nullptr);
 }
 

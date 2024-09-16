@@ -43,6 +43,7 @@ namespace js
             static std::unordered_map<alt::CEvent::Type, Event*> eventHandlerMap;
             return eventHandlerMap;
         }
+
         static Event* GetEventHandler(alt::CEvent::Type type)
         {
             auto& eventHandlerMap = GetEventHandlerMap();
@@ -50,7 +51,8 @@ namespace js
             if(it == eventHandlerMap.end()) return nullptr;
             return it->second;
         }
-        static js::Promise CallEventBinding(bool custom, int type, EventArgs& args, IResource* resource);
+
+        static std::optional<js::Promise> CallEventBinding(bool custom, int type, EventArgs& args, IResource* resource);
 
     public:
         Event(alt::CEvent::Type _type, EventArgsCallback _argsCb) : type(_type), argsCb(_argsCb)
