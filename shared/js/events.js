@@ -95,10 +95,10 @@ export class Event {
             const { handler, location, onlyOnce, eventName } = eventHandler;
 
             try {
-                const startTime = Date.now();
+                const startTime = alt.getNetTime();
                 if (isPlayerScriptEvent) handler(ctx.player, ...ctx.args);
                 else handler(...ctx.args);
-                const duration = Date.now() - startTime;
+                const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold) {
                     alt.logWarning(`[JS] Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for script event '${name}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 }
@@ -196,9 +196,9 @@ export class Event {
 
         for (let { handler, location } of handlers) {
             try {
-                const startTime = Date.now();
+                const startTime = alt.getNetTime();
                 handler(genericCtx);
-                const duration = Date.now() - startTime;
+                const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold) {
                     alt.logWarning(`[JS] Generic event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 }
@@ -261,9 +261,9 @@ export class Event {
             const { handler, location, onlyOnce } = eventHandler;
 
             try {
-                const startTime = Date.now();
+                const startTime = alt.getNetTime();
                 handler(ctx);
-                const duration = Date.now() - startTime;
+                const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold)
                     alt.logWarning(`[JS] Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 if (onlyOnce) eventHandler.destroy();

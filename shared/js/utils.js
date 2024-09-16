@@ -14,17 +14,17 @@ export function waitFor(cb, timeout = 2000) {
     assertIsType(cb, "function", "Expected a function as first argument");
     assertIsType(timeout, "number", "Expected a number or undefined as second argument");
 
-    const checkUntil = Date.now() + timeout;
+    const checkUntil = alt.getNetTime() + timeout;
     const sourceLocation = cppBindings.getCurrentSourceLocation();
     const source = `resource: ${cppBindings.resourceName} source: ${sourceLocation.fileName}:${sourceLocation.lineNumber}`;
 
     return new Promise((resolve, reject) => {
         alt.Timers.everyTick(function () {
-            if (Date.now() > checkUntil) {
+            if (alt.getNetTime() > checkUntil) {
                 this.destroy();
                 return reject(new Error(`waitFor timed out (limit was ${timeout}ms, ${source})`));
             }
-            
+
             let result;
             try {
                 result = cb();

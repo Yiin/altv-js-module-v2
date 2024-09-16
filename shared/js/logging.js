@@ -2814,32 +2814,45 @@ cppBindings.registerExport(cppBindings.BindingExport.LOG_INSPECT, inspectMultipl
 /** @type {Map<string, number>} */
 const timeLabelMap = new Map();
 function time(label) {
-    if (timeLabelMap.has(label ?? "Timer")) throw new Error(`Label '${label ?? "Timer"}' already running`);
-    timeLabelMap.set(label ?? "Timer", Date.now());
+    if (timeLabelMap.has(label ?? "Timer")) {
+        throw new Error(`Label '${label ?? "Timer"}' already running`);
+    }
+
+    timeLabelMap.set(label ?? "Timer", alt.getNetTime());
 }
 function timeLog(label) {
-    const start = timeLabelMap.get(label ?? "Timer");
-    if (start === undefined) throw new Error(`No such label '${label ?? "Timer"}' running`);
-    const duration = Date.now() - start;
+    const startTime = timeLabelMap.get(label ?? "Timer");
+    if (startTime === undefined) {
+        throw new Error(`No such label '${label ?? "Timer"}' running`);
+    }
+
+    const duration = alt.getNetTime() - startTime;
     alt.log(`[JS] ${label ?? "Timer"}: ${duration}ms`);
 }
 function timeEnd(label) {
-    const start = timeLabelMap.get(label ?? "Timer");
-    if (start === undefined) throw new Error(`No such label '${label ?? "Timer"}' running`);
-    const duration = Date.now() - start;
+    const startTime = timeLabelMap.get(label ?? "Timer");
+    if (startTime === undefined) {
+        throw new Error(`No such label '${label ?? "Timer"}' running`);
+    }
+
+    const duration = alt.getNetTime() - startTime;
     alt.log(`[JS] ${label ?? "Timer"}: ${duration}ms`);
     timeLabelMap.delete(label ?? "Timer");
 }
 
 function logDebug(...args) {
     if (!alt.isDebug) return;
+
     alt.log(...args);
 }
 
 alt.logDebug = logDebug;
 
 if (alt.isClient) {
-    if (!globalThis.console) globalThis.console = {};
+    if (!globalThis.console) {
+        globalThis.console = {};
+    }
+
     globalThis.console.log = alt.log;
     globalThis.console.debug = alt.logDebug;
     globalThis.console.warn = alt.logWarning;

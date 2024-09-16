@@ -73,7 +73,7 @@ class Timer {
 
         this.interval = interval;
         this.callback = callback.bind(this, ...(Array.isArray(args) ? args : []));
-        this.lastTick = Date.now();
+        this.lastTick = alt.getNetTime();
         this.once = once;
         this.#_type = type;
         this.#_id = Timer.#timerIncrementer++;
@@ -86,7 +86,7 @@ class Timer {
     }
 
     tick() {
-        const now = Date.now();
+        const now = alt.getNetTime();
         if (this.interval === 0 || now - this.lastTick >= this.interval) {
             try {
                 this.callback();
@@ -96,7 +96,7 @@ class Timer {
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location: this.location, stack: e.stack }, true);
             }
-            this.lastTick = Date.now();
+            this.lastTick = alt.getNetTime();
 
             const duration = this.lastTick - now;
             if (duration > Timer.#_warningThreshold) {
@@ -141,9 +141,11 @@ const timeMap = new Map();
 function time(name) {
     const key = typeof name == "string" ? name : "";
 
-    if (timeMap.has(key)) throw new Error(`Benchmark timer ${key} already exists`);
+    if (timeMap.has(key)) {
+        throw new Error(`Benchmark timer ${key} already exists`);
+    }
 
-    timeMap.set(key, Date.now());
+    timeMap.set(key, alt.getNetTime());
 }
 
 /**
@@ -153,9 +155,11 @@ function time(name) {
 function timeEnd(name) {
     const key = typeof name == "string" ? name : "";
 
-    if (!timeMap.has(key)) throw new Error(`Benchmark timer ${key} not found`);
+    if (!timeMap.has(key)) {
+        throw new Error(`Benchmark timer ${key} not found`);
+    }
 
-    const diff = Date.now() - timeMap.get(key);
+    const diff = alt.getNetTime() - timeMap.get(key);
     timeMap.delete(key);
 
     alt.log(`Timer ${key}: ${diff}ms`);
@@ -201,6 +205,7 @@ globalThis.clearInterval = (interval) => {
         interval.destroy();
     }
 };
+
 globalThis.clearTimeout = (timeout) => {
     if (timeout instanceof Timeout) {
         timeout.destroy();
