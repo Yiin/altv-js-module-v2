@@ -7,9 +7,8 @@ const { extendClassWithProperties, overrideLazyProperty } = requireBinding("shar
 
 const { SharedPlayer } = requireBinding("shared/compatibility/classes/sharedPlayer.js");
 
-// NOTE(xLuxy): Store the original spawn method to call it later since we can't call it directly using super
-//              and we need to override it
 const originalSpawnMethod = alt.Player.prototype.spawn;
+const originalSetDlcClothes = alt.Player.prototype.setDlcClothes;
 
 class Player {
     onCreate() {
@@ -63,6 +62,10 @@ class Player {
         }
 
         originalSpawnMethod.call(this, pos, delay);
+    }
+
+    setDlcClothes(dlc, component, drawable, texture, palette = 2) {
+        return originalSetDlcClothes.call(this, component, drawable, texture, palette, dlc);
     }
 
     isEntityInStreamRange(entity) {
