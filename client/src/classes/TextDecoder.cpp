@@ -1,6 +1,6 @@
 #include "Class.h"
 
-static void Constructor(js::FunctionContext& ctx)
+static void TextDecoderConstructor(js::FunctionContext& ctx)
 {
     if (!ctx.CheckCtor()) return;
     if (!ctx.CheckArgCount(0, 2)) return;
@@ -35,7 +35,7 @@ static void EncodingGetter(js::PropertyContext& ctx)
     ctx.Return(ctx.GetThis()->Get(ctx.GetContext(), js::JSValue("__encoding")).ToLocalChecked());
 }
 
-extern js::Class textDecoderClass("TextDecoder", Constructor, [](js::ClassTemplate& tpl)
+extern js::Class textDecoderClass("TextDecoder", TextDecoderConstructor, [](js::ClassTemplate& tpl)
 {
     tpl.Property("encoding", EncodingGetter);
 });
