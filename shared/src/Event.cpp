@@ -1,6 +1,5 @@
 #include "Event.h"
 #include "interfaces/IResource.h"
-#include "magic_enum/include/magic_enum.hpp"
 
 extern js::Class eventContextClass, cancellableEventContextClass;
 

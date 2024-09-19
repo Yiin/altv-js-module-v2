@@ -10,18 +10,19 @@
 
 static void ModuleCommand(const std::vector<std::string>& args)
 {
-    if(args.size() == 0)
+    if (args.empty())
     {
         js::Logger::Colored("~y~Usage: ~w~js-module-v2 [options]");
         js::Logger::Colored("~y~Options:");
         js::Logger::Colored("  ~ly~--version ~w~- Version info");
     }
-    else if(args[0] == "--version")
+    else if (args[0] == "--version")
     {
         js::Logger::Colored("~g~JS Module v2:");
         js::Logger::Colored("~ly~module:", MODULE_VERSION);
         js::Logger::Colored("~ly~cpp-sdk:", ALT_SDK_VERSION);
         js::Logger::Colored("~ly~nodejs:", std::to_string(NODE_MAJOR_VERSION) + "." + std::to_string(NODE_MINOR_VERSION) + "." + std::to_string(NODE_PATCH_VERSION));
+        js::Logger::Colored("~ly~v8:", std::to_string(V8_MAJOR_VERSION) + "." + std::to_string(V8_MINOR_VERSION) + "." + std::to_string(V8_BUILD_NUMBER));
     }
 }
 

@@ -73,9 +73,10 @@ namespace js
             if(context.IsEmpty()) return;
             IResource::Scope scope(this);
 
-            if (ev->GetType() == alt::CEvent::Type::RESOURCE_STOP) DestroyResourceObject(static_cast<const alt::CResourceStopEvent*>(ev)->GetResource());
-
             Event::SendEvent(ev, this);
+
+            if (ev->GetType() == alt::CEvent::Type::RESOURCE_STOP)
+                DestroyResourceObject(static_cast<const alt::CResourceStopEvent*>(ev)->GetResource());
         }
 
         void OnTick() override
