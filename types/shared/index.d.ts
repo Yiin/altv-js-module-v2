@@ -686,6 +686,8 @@ declare module "@altv/shared" {
         export function isVector3(val: unknown): boolean;
         export function assertVector3(val: IVector3, message?: string): void;
 
+        export function isAsyncFunction(val: unknown): boolean;
+
         interface ClosestEntityOptions {
             pos?: IVector3; // default: localPlayer.pos - required for server!
             range?: number; // default: infinity

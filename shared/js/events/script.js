@@ -37,7 +37,11 @@ alt.Events.onAnyResourceStart(({ resource }) => {
     Event.invoke(alt.Enums.CustomEventType.RESOURCE_START, {}, true);
 });
 
-alt.Events.onAnyResourceStop(({ resource }) => {
+alt.Events.onAnyResourceStop(async ({ resource }) => {
     if (resource.name !== alt.Resource.current.name) return;
-    Event.invoke(alt.Enums.CustomEventType.RESOURCE_STOP, {}, true);
+
+    const promises = Event.invoke(alt.Enums.CustomEventType.RESOURCE_STOP, {}, true);
+    if (promises.length >= 1) {
+        await Promise.all(promises);
+    }
 });

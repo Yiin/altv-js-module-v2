@@ -13,7 +13,7 @@ std::optional<js::Promise> js::Event::CallEventBinding(bool custom, int type, Ev
     std::optional<v8::Local<v8::Value>> result = onEvent.Call<v8::Local<v8::Value>>(custom, type, args.Get());
     auto promise = js::Promise{ result.value_or(v8::Local<v8::Value>()).As<v8::Promise>() };
 
-    if (!promise.Get().IsEmpty())
+    if (!promise.Get().IsEmpty() && !promise.Get()->HasHandler())
         return promise;
 
     return std::nullopt;
@@ -33,7 +33,7 @@ void js::Event::SendEvent(const alt::CEvent* ev, IResource* resource)
     eventHandler->argsCb(ev, eventArgs);
 
     auto promise = CallEventBinding(false, (int)ev->GetType(), eventArgs, resource);
-    if (promise.has_value() && ev->GetType() == alt::CEvent::Type::RESOURCE_STOP && resource->GetResource() == static_cast<const alt::CResourceStopEvent*>(ev)->GetResource())
+    if (promise.has_value() && ev->GetType() == alt::CEvent::Type::RESOURCE_STOP)
     {
         promise->Await();
     }

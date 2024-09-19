@@ -95,6 +95,10 @@ export function assertVector3(val, message = "Expected Vector3") {
     return assert(isVector3(val), message);
 }
 
+export function isAsyncFunction(val) {
+    return typeof val == "function" && val.constructor.name === "AsyncFunction";
+}
+
 alt.Utils.AssertionError = AssertionError;
 alt.Utils.assert = assert;
 alt.Utils.assertIsObject = assertIsObject;
@@ -106,6 +110,8 @@ alt.Utils.assertVector3 = assertVector3;
 
 alt.Utils.isVector2 = isVector2;
 alt.Utils.isVector3 = isVector3;
+
+alt.Utils.isAsyncFunction = isAsyncFunction;
 
 export function hash(str) {
     assertIsType(str, "string", "Expected a string as first argument");
