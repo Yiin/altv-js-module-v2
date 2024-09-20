@@ -1855,7 +1855,9 @@ declare module "@altv/client" {
 
         // SHARED resource events
         export function onResourceStart(callback: GenericEventCallback<ResourceStartEventParameters>): altShared.Events.EventHandler;
+        export function onceResourceStart(callback: GenericEventCallback): altShared.Events.EventHandler;
         export function onResourceStop(callback: GenericEventCallback<ResourceStopEventParameters>): altShared.Events.EventHandler;
+        export function onceResourceStop(callback: GenericEventCallback): altShared.Events.EventHandler;
         export function onResourceError(callback: GenericEventCallback<ResourceErrorEventParameters>): altShared.Events.EventHandler;
 
         // Custom events
