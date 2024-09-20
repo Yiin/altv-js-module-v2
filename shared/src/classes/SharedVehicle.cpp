@@ -1,23 +1,20 @@
 #include "Class.h"
 
-static void NeonGetter(js::DynamicPropertyGetterContext& ctx)
+static void NeonGetter(js::PropertyContext& ctx)
 {
-    if(!ctx.CheckParent()) return;
-    alt::IVehicle* vehicle = ctx.GetParent<alt::IVehicle>();
+    if (!ctx.CheckThis()) return;
+    alt::IVehicle* vehicle = ctx.GetThisObject<alt::IVehicle>();
 
     bool left, right, front, back;
     vehicle->GetNeonActive(&left, &right, &front, &back);
-    bool val = false;
-    std::string prop = ctx.GetProperty();
-    if(prop == "left") val = left;
-    else if(prop == "right")
-        val = right;
-    else if(prop == "front")
-        val = front;
-    else if(prop == "back")
-        val = back;
 
-    ctx.Return(val);
+    js::Object neonState;
+    neonState.Set("left", left);
+    neonState.Set("right", right);
+    neonState.Set("front", front);
+    neonState.Set("back", back);
+
+    ctx.Return(neonState);
 }
 
 static void GetNeonActive(js::FunctionContext& ctx)
@@ -52,7 +49,7 @@ static void NeonEnumerator(js::DynamicPropertyEnumeratorContext& ctx)
 extern js::Class entityClass;
 extern js::Class sharedVehicleClass("SharedVehicle", &entityClass, nullptr, [](js::ClassTemplate& tpl)
 {
-    tpl.DynamicProperty("neon", &NeonGetter, nullptr, nullptr, &NeonEnumerator);
+    tpl.Property("neon", &NeonGetter, nullptr);
     tpl.Method("getNeonActive", &GetNeonActive);
 
     tpl.Property<&alt::IVehicle::GetDriver>("driver");

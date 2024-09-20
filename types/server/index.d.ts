@@ -613,7 +613,7 @@ declare module "@altv/server" {
     }
 
     export abstract class Vehicle extends Entity {
-        readonly neon: altShared.VehicleNeonState;
+        neon: altShared.VehicleNeonState;
         readonly driver?: Player;
         readonly isDestroyed: boolean;
         readonly modKitsCount: number;

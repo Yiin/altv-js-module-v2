@@ -131,7 +131,7 @@ extendClassWithProperties(
     alt.Player,
     {
         whitelist: {
-            nonStatic: ["spawn"]
+            nonStatic: ["spawn", "setDlcClothes"]
         }
     },
     Player,
