@@ -66,6 +66,17 @@ class Timer {
         return timers.get(id) || null;
     }
 
+    /**
+     *
+     * @param {number | Timer} idOrHandle
+     */
+    static isValid(idOrHandle) {
+        if (!idOrHandle) return false;
+
+        const id = idOrHandle instanceof Timer ? idOrHandle.id : idOrHandle;
+        return timers.has(id);
+    }
+
     constructor(type, callback, interval, once, args) {
         assertIsType(type, "number", "Expected a number as first argument");
         assertIsType(callback, "function", "Expected a function as second argument");
@@ -171,6 +182,7 @@ alt.Timers.EveryTick = EveryTick;
 alt.Timers.NextTick = NextTick;
 
 alt.Timers.getByID = Timer.getByID;
+alt.Timers.isValid = Timer.isValid;
 
 alt.Timers.setInterval = (callback, interval, ...args) => new Interval(callback, interval, ...args);
 alt.Timers.setTimeout = (callback, timeout, ...args) => new Timeout(callback, timeout, ...args);

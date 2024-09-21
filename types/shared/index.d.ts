@@ -649,6 +649,7 @@ declare module "@altv/shared" {
         export function timeEnd(name?: string): void;
 
         export function getByID(id: number): Timer | null;
+        export function isValid(idOrHandle?: number | Timer): boolean;
     }
 
     // DO NOT TOUCH THIS - This is only here so client / server can extend Utils namespace using merging
