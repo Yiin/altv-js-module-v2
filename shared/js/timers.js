@@ -38,6 +38,7 @@ class Timer {
     lastTick;
     /** @type {boolean} */
     once;
+
     /** @type {{ fileName: string, lineNumber: number }} */
     location;
 
@@ -81,6 +82,7 @@ class Timer {
         assertIsType(type, "number", "Expected a number as first argument");
         assertIsType(callback, "function", "Expected a function as second argument");
         assertIsType(interval, "number", "Expected a number as third argument");
+        assertIsType(once, "boolean", "Expected a boolean as fourth argument");
 
         this.interval = interval;
         this.callback = callback.bind(this, ...(Array.isArray(args) ? args : []));

@@ -3468,7 +3468,7 @@ declare abstract class Timer {
     public interval: number;
     public callback: Function;
     public lastTick: number;
-    public once?: boolean;
+    public once: boolean;
     public location: import("@altv/shared").SourceLocation;
 
     public get type(): import("@altv/shared").Enums.TimerType;
