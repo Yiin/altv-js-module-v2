@@ -37,7 +37,7 @@ function applyNonStaticProperties(baseClass, cls, options) {
                 ["get", "set", "value"].forEach((key) => {
                     if (key in newDescriptor && (!mergedDescriptor[key] || isWhitelisted)) {
                         if (options.verbose) {
-                            alt.log(`~ly~[JS] ~lr~Merged ${key} for ${prop} from ${prot.constructor.name} to ${baseClass.name}`);
+                            alt.log(`~lr~Merged ${key} for ${prop} from ${prot.constructor.name} to ${baseClass.name}`);
                         }
                         mergedDescriptor[key] = newDescriptor[key];
                     }
@@ -50,7 +50,7 @@ function applyNonStaticProperties(baseClass, cls, options) {
 
                 if (options.verbose) {
                     const action = baseDescriptor ? "Merged" : "Applied";
-                    alt.log(`~ly~[JS] ~lb~${action} non-static property ${prop} from ${prot.constructor.name} to ${baseClass.name}`);
+                    alt.log(`~lb~${action} non-static property ${prop} from ${prot.constructor.name} to ${baseClass.name}`);
                 }
             }
         }
@@ -67,7 +67,7 @@ function applyStaticProperties(baseClass, cls, options) {
         if (doesPropertyExist && !canBeOverriden) {
             if (options.verbose) {
                 const reason = !canBeOverriden ? "blacklisted" : "already exists";
-                alt.log(`~ly~[JS] ~lb~Skipping static property ${propKey} in ${cls.name}: ${reason}`);
+                alt.log(`~lb~Skipping static property ${propKey} in ${cls.name}: ${reason}`);
             }
 
             continue;
@@ -82,7 +82,7 @@ function applyStaticProperties(baseClass, cls, options) {
             Object.defineProperty(baseClass, propKey, descriptor);
 
             if (options.verbose) {
-                alt.log(`~ly~[JS] ~lb~Applied static property ${propKey} in ${cls.name} to ${baseClass.name}`);
+                alt.log(`~lb~Applied static property ${propKey} in ${cls.name} to ${baseClass.name}`);
             }
         }
     }
@@ -132,7 +132,7 @@ export function overrideLazyProperty(instance, propertyName, value) {
     const descriptor = Object.getOwnPropertyDescriptor(instance, propertyName);
 
     if (!descriptor) {
-        alt.log(`~ly~[JS] ~lr~Lazy Property ${propertyName} does not exist in ${instance.constructor.name} to override property`);
+        alt.log(`~lr~Lazy Property ${propertyName} does not exist in ${instance.constructor.name} to override property`);
         return;
     }
 

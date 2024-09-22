@@ -59,15 +59,15 @@ void js::Binding::CleanupForResource(IResource* resource)
 
 void js::Binding::Dump()
 {
-    Logger::Warn("[JS] Binding:", GetName());
-    Logger::Warn("[JS]   Valid:", IsValid());
-    Logger::Warn("[JS]   Scope:", magic_enum::enum_name(GetScope()));
-    Logger::Warn("[JS]   Source size:", strlen(GetSource()));
+    Logger::Warn("Binding:", GetName());
+    Logger::Warn("  Valid:", IsValid());
+    Logger::Warn("  Scope:", magic_enum::enum_name(GetScope()));
+    Logger::Warn("  Source size:", strlen(GetSource()));
     Logger::Warn(GetSource());
 }
 
 void js::Binding::DumpAll()
 {
-    Logger::Warn("[JS] Bindings count:", __bindings.size());
+    Logger::Warn("Bindings count:", __bindings.size());
     for(auto& [name, binding] : __bindings) binding.Dump();
 }

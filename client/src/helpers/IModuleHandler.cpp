@@ -235,7 +235,7 @@ v8::MaybeLocal<v8::Module> IModuleHandler::CompileBytecode(const std::string& na
     v8::MaybeLocal<v8::Module> module = v8::ScriptCompiler::CompileModule(isolate, &source, v8::ScriptCompiler::kConsumeCodeCache);
     if(cachedData->rejected)
     {
-        js::Logger::Error("[JS] Trying to load invalid bytecode");
+        js::Logger::Error("Trying to load invalid bytecode");
         return v8::MaybeLocal<v8::Module>();
     }
     return module;

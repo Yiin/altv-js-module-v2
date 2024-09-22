@@ -104,7 +104,7 @@ class Timer {
             try {
                 this.callback();
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking timer callback`);
+                alt.logError(`Exception caught while invoking timer callback`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location: this.location, stack: e.stack }, true);
@@ -113,7 +113,7 @@ class Timer {
 
             const duration = this.lastTick - now;
             if (duration > Timer.#_warningThreshold) {
-                alt.logWarning(`[JS] Timer callback in resource '${cppBindings.resourceName}' (${this.location.fileName}:${this.location.lineNumber}) took ${duration}ms to execute (Threshold: ${Timer.#_warningThreshold}ms)`);
+                alt.logWarning(`Timer callback in resource '${cppBindings.resourceName}' (${this.location.fileName}:${this.location.lineNumber}) took ${duration}ms to execute (Threshold: ${Timer.#_warningThreshold}ms)`);
             }
 
             if (this.once) this.destroy();

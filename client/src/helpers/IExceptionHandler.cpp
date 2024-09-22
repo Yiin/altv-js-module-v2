@@ -27,8 +27,8 @@ void IExceptionHandler::OnPromiseRejectAfterResolve(v8::PromiseRejectMessage& me
     v8::Isolate* isolate = resource->GetIsolate();
     std::string rejectionMsg = *v8::String::Utf8Value(isolate, message.GetValue()->ToString(resource->GetContext()).ToLocalChecked());
 
-    js::Logger::Error("[JS] Promise rejected after already being resolved in resource '" + resourceName + "'");
-    if(!rejectionMsg.empty()) js::Logger::Error("[JS]", rejectionMsg);
+    js::Logger::Error("Promise rejected after already being resolved in resource '" + resourceName + "'");
+    if(!rejectionMsg.empty()) js::Logger::Error(rejectionMsg);
 }
 
 void IExceptionHandler::OnPromiseResolveAfterResolve(v8::PromiseRejectMessage& message)
@@ -38,8 +38,8 @@ void IExceptionHandler::OnPromiseResolveAfterResolve(v8::PromiseRejectMessage& m
     v8::Isolate* isolate = resource->GetIsolate();
     std::string rejectionMsg = *v8::String::Utf8Value(isolate, message.GetValue()->ToString(resource->GetContext()).ToLocalChecked());
 
-    js::Logger::Error("[JS] Promise resolved after already being resolved in resource '" + resourceName + "'");
-    if(!rejectionMsg.empty()) js::Logger::Error("[JS]", rejectionMsg);
+    js::Logger::Error("Promise resolved after already being resolved in resource '" + resourceName + "'");
+    if(!rejectionMsg.empty()) js::Logger::Error(rejectionMsg);
 }
 
 void IExceptionHandler::ProcessExceptions()
@@ -51,9 +51,9 @@ void IExceptionHandler::ProcessExceptions()
     for(PromiseRejection& rejection : promiseRejections)
     {
         std::string rejectionMsg = *v8::String::Utf8Value(isolate, rejection.value.Get(isolate)->ToString(resource->GetContext()).ToLocalChecked());
-        js::Logger::Error("[JS] Unhandled promise rejection in resource '" + resourceName + "' in file '" + rejection.location.file + "' at line " + std::to_string(rejection.location.line));
-        if(!rejectionMsg.empty()) js::Logger::Error("[JS]", rejectionMsg);
-        if(!rejection.stackTrace.IsEmpty()) js::Logger::Error("[JS]", rejection.stackTrace.ToString());
+        js::Logger::Error("Unhandled promise rejection in resource '" + resourceName + "' in file '" + rejection.location.file + "' at line " + std::to_string(rejection.location.line));
+        if(!rejectionMsg.empty()) js::Logger::Error(rejectionMsg);
+        if(!rejection.stackTrace.IsEmpty()) js::Logger::Error(rejection.stackTrace.ToString());
     }
     promiseRejections.clear();
 }

@@ -2827,7 +2827,7 @@ function timeLog(label) {
     }
 
     const duration = alt.getNetTime() - startTime;
-    alt.log(`[JS] ${label ?? "Timer"}: ${duration}ms`);
+    alt.log(`${label ?? "Timer"}: ${duration}ms`);
 }
 function timeEnd(label) {
     const startTime = timeLabelMap.get(label ?? "Timer");
@@ -2836,7 +2836,7 @@ function timeEnd(label) {
     }
 
     const duration = alt.getNetTime() - startTime;
-    alt.log(`[JS] ${label ?? "Timer"}: ${duration}ms`);
+    alt.log(`${label ?? "Timer"}: ${duration}ms`);
     timeLabelMap.delete(label ?? "Timer");
 }
 

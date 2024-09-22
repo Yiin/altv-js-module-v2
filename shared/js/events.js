@@ -112,12 +112,12 @@ export class Event {
 
                 const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold) {
-                    alt.logWarning(`[JS] Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for script event '${name}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
+                    alt.logWarning(`Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for script event '${name}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 }
 
                 if (onlyOnce) eventHandler.destroy();
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking script event '${name}' handler`);
+                alt.logError(`Exception caught while invoking script event '${name}' handler`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location, stack: e.stack }, true);
@@ -218,10 +218,10 @@ export class Event {
 
                 const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold) {
-                    alt.logWarning(`[JS] Generic event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
+                    alt.logWarning(`Generic event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 }
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking generic event handler`);
+                alt.logError(`Exception caught while invoking generic event handler`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location, stack: e.stack }, true);
@@ -292,14 +292,14 @@ export class Event {
 
                 const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold) {
-                    alt.logWarning(`[JS] Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
+                    alt.logWarning(`Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 }
 
                 if (onlyOnce) {
                     eventHandler.destroy();
                 }
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking event handler`);
+                alt.logError(`Exception caught while invoking event handler`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location, stack: e.stack }, true);
