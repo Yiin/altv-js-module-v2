@@ -576,6 +576,9 @@ declare module "@altv/client" {
         static create(): HttpClient;
 
         static getByID(id: number): HttpClient | null;
+
+        static setFactory(factory: typeof HttpClient): void;
+        static getFactory<T extends HttpClient>(): T;
     }
 
     export abstract class Object extends Entity {

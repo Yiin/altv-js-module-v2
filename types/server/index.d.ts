@@ -1036,6 +1036,9 @@ declare module "@altv/server" {
         // static readonly all: ReadonlyArray<ConnectionInfo>;
 
         static getByID(id: number): ConnectionInfo | undefined;
+
+        static setFactory(factory: typeof ConnectionInfo): void;
+        static getFactory<T extends ConnectionInfo>(): T;
     }
 
     export namespace Events {
