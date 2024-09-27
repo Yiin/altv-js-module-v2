@@ -89,7 +89,7 @@ bool js::NativeInvoker::PushArgs(js::FunctionContext& ctx, alt::INative* native)
             }
             default:
             {
-                Logger::Warn("[JS] Unknown native argument type", magic_enum::enum_name(nativeArgs[i]), "for native", native->GetName(), "at index", i);
+                Logger::Warn("Unknown native argument type", magic_enum::enum_name(nativeArgs[i]), "for native", native->GetName(), "at index", i);
                 break;
             }
         }
@@ -115,7 +115,7 @@ v8::Local<v8::Value> js::NativeInvoker::GetPointerReturnValue(alt::INative::Type
             return resource->CreateVector3({ vector->x, vector->y, vector->z });
         }
     }
-    // js::Logger::Warn("[JS] Unknown native pointer return type:", magic_enum::enum_name(type), (int)type);
+    // js::Logger::Warn("Unknown native pointer return type:", magic_enum::enum_name(type), (int)type);
     return v8::Undefined(resource->GetIsolate());
 }
 
@@ -137,7 +137,7 @@ v8::Local<v8::Value> js::NativeInvoker::GetReturnValue()
         case Type::ARG_STRING: return js::JSValue(nativeContext->ResultString());
         case Type::ARG_VOID: return v8::Undefined(resource->GetIsolate());
     }
-    js::Logger::Warn("[JS] Unknown native return type:", magic_enum::enum_name(native->GetRetnType()), (int)native->GetRetnType());
+    js::Logger::Warn("Unknown native return type:", magic_enum::enum_name(native->GetRetnType()), (int)native->GetRetnType());
     return v8::Undefined(resource->GetIsolate());
 }
 

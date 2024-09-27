@@ -649,6 +649,7 @@ declare module "@altv/shared" {
         export function timeEnd(name?: string): void;
 
         export function getByID(id: number): Timer | null;
+        export function isValid(idOrHandle?: number | Timer): boolean;
     }
 
     // DO NOT TOUCH THIS - This is only here so client / server can extend Utils namespace using merging
@@ -685,6 +686,8 @@ declare module "@altv/shared" {
         export function assertVector2(val: IVector2, message?: string): void;
         export function isVector3(val: unknown): boolean;
         export function assertVector3(val: IVector3, message?: string): void;
+
+        export function isAsyncFunction(val: unknown): boolean;
 
         interface ClosestEntityOptions {
             pos?: IVector3; // default: localPlayer.pos - required for server!
@@ -3465,7 +3468,7 @@ declare abstract class Timer {
     public interval: number;
     public callback: Function;
     public lastTick: number;
-    public once?: boolean;
+    public once: boolean;
     public location: import("@altv/shared").SourceLocation;
 
     public get type(): import("@altv/shared").Enums.TimerType;

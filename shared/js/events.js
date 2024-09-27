@@ -1,5 +1,5 @@
 /** @type {typeof import("./utils.js")} */
-const { assert, assertIsType } = requireBinding("shared/utils.js");
+const { assert, assertIsType, isAsyncFunction } = requireBinding("shared/utils.js");
 
 /** @type {typeof import("../../shared/js/helpers/events.js")} */
 const { emitRaw } = requireBinding("shared/helpers/events.js");
@@ -88,29 +88,43 @@ export class Event {
     static #handleScriptEvent(ctx, local) {
         const name = ctx.eventName;
         const handlers = local ? Event.#localScriptEventHandlers.get(name) : Event.#remoteScriptEventHandlers.get(name);
-        if (!handlers) return;
+        if (!handlers) {
+            return [];
+        }
+
         const isPlayerScriptEvent = alt.isServer && !local;
 
+        const promises = [];
         for (let eventHandler of handlers) {
             const { handler, location, onlyOnce, eventName } = eventHandler;
 
             try {
-                const startTime = Date.now();
-                if (isPlayerScriptEvent) handler(ctx.player, ...ctx.args);
-                else handler(...ctx.args);
-                const duration = Date.now() - startTime;
+                const startTime = alt.getNetTime();
+
+                const isAsync = isAsyncFunction(handler);
+                if (isPlayerScriptEvent) {
+                    if (isAsync) promises.push(handler(ctx.player, ...ctx.args));
+                    else handler(ctx.player, ...ctx.args);
+                } else {
+                    if (isAsync) promises.push(handler(...ctx.args));
+                    else handler(...ctx.args);
+                }
+
+                const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold) {
-                    alt.logWarning(`[JS] Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for script event '${name}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
+                    alt.logWarning(`Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for script event '${name}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 }
 
                 if (onlyOnce) eventHandler.destroy();
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking script event '${name}' handler`);
+                alt.logError(`Exception caught while invoking script event '${name}' handler`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location, stack: e.stack }, true);
             }
         }
+
+        return promises;
     }
 
     static getEventHandlers() {
@@ -186,7 +200,7 @@ export class Event {
      */
     static #invokeGeneric(eventType, ctx, custom) {
         const handlers = Event.#genericHandlers;
-        if (!handlers.size) return;
+        if (!handlers.size) return [];
 
         const genericCtx = Object.freeze({
             ...ctx,
@@ -194,21 +208,27 @@ export class Event {
             customEvent: custom
         });
 
+        const promises = [];
         for (let { handler, location } of handlers) {
             try {
-                const startTime = Date.now();
-                handler(genericCtx);
-                const duration = Date.now() - startTime;
+                const startTime = alt.getNetTime();
+
+                if (isAsyncFunction(handler)) promises.push(handler(genericCtx));
+                else handler(genericCtx);
+
+                const duration = alt.getNetTime() - startTime;
                 if (duration > Event.#warningThreshold) {
-                    alt.logWarning(`[JS] Generic event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
+                    alt.logWarning(`Generic event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
                 }
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking generic event handler`);
+                alt.logError(`Exception caught while invoking generic event handler`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location, stack: e.stack }, true);
             }
         }
+
+        return promises;
     }
 
     /**
@@ -250,30 +270,43 @@ export class Event {
      * @param {boolean} custom
      */
     static invoke(eventType, ctx, custom) {
-        Event.#invokeGeneric(eventType, ctx, custom);
-        if (eventType === alt.Enums.EventType.CLIENT_SCRIPT_EVENT) Event.#handleScriptEvent(ctx, alt.isClient);
-        else if (eventType === alt.Enums.EventType.SERVER_SCRIPT_EVENT) Event.#handleScriptEvent(ctx, alt.isServer);
+        let promises = Event.#invokeGeneric(eventType, ctx, custom);
+
+        if (eventType === alt.Enums.EventType.CLIENT_SCRIPT_EVENT) promises = [...Event.#handleScriptEvent(ctx, alt.isClient), ...promises];
+        else if (eventType === alt.Enums.EventType.SERVER_SCRIPT_EVENT) promises = [...Event.#handleScriptEvent(ctx, alt.isServer), ...promises];
 
         const map = custom ? Event.#customHandlers : Event.#handlers;
         const handlers = map.get(eventType);
-        if (!handlers) return;
+
+        if (!handlers) {
+            return promises;
+        }
+
         for (const eventHandler of handlers) {
             const { handler, location, onlyOnce } = eventHandler;
 
             try {
-                const startTime = Date.now();
-                handler(ctx);
-                const duration = Date.now() - startTime;
-                if (duration > Event.#warningThreshold)
-                    alt.logWarning(`[JS] Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
-                if (onlyOnce) eventHandler.destroy();
+                const startTime = alt.getNetTime();
+                if (isAsyncFunction(handler)) promises.push(handler(ctx));
+                else handler(ctx);
+
+                const duration = alt.getNetTime() - startTime;
+                if (duration > Event.#warningThreshold) {
+                    alt.logWarning(`Event handler in resource '${cppBindings.resourceName}' (${location.fileName}:${location.lineNumber}) for event '${Event.getEventName(eventType, custom)}' took ${duration}ms to execute (Threshold: ${Event.#warningThreshold}ms)`);
+                }
+
+                if (onlyOnce) {
+                    eventHandler.destroy();
+                }
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking event handler`);
+                alt.logError(`Exception caught while invoking event handler`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location, stack: e.stack }, true);
             }
         }
+
+        return promises;
     }
 }
 
@@ -404,7 +437,12 @@ Object.defineProperties(alt.Events, {
 alt.Events.setWarningThreshold = Event.setWarningThreshold;
 alt.Events.setSourceLocationFrameSkipCount = Event.setSourceLocationFrameSkipCount;
 
-function onEvent(custom, eventType, eventData) {
-    return Event.invoke(eventType, eventData, custom);
+async function onEvent(custom, eventType, eventData) {
+    const promises = Event.invoke(eventType, eventData, custom);
+
+    if (promises.length >= 1) {
+        return Promise.all(promises);
+    }
 }
+
 cppBindings.registerExport(cppBindings.BindingExport.ON_EVENT, onEvent);

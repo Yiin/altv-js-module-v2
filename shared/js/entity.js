@@ -55,10 +55,14 @@ alt.Events.onBaseObjectRemove(({ object }) => {
 });
 
 export function addEntityToAll(entity) {
+    if (entity == null || !(entity instanceof alt.BaseObject)) return;
+
     addEntityToAllWithType(entity, entity.type);
 }
 
 export function removeEntityFromAll(entity) {
+    if (entity == null || !(entity instanceof alt.BaseObject)) return;
+
     entityAllSetDirty = true;
     entityAllSet.delete(entity);
     const all = entityAllMap.get(entity.type);

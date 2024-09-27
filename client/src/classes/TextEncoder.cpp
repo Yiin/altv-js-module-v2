@@ -1,10 +1,11 @@
 #include "Class.h"
 
+static void TextEncoderConstructor(js::FunctionContext&) { }
+
 static void EncodingGetter(js::LazyPropertyContext& ctx)
 {
     ctx.Return(std::string("utf-8"));
 }
-
 
 static void Encode(js::FunctionContext& ctx)
 {
@@ -48,7 +49,7 @@ static void EncodeInto(js::FunctionContext& ctx)
     ctx.Return(result);
 }
 
-extern js::Class textEncoderClass("TextEncoder", [](js::ClassTemplate& tpl)
+extern js::Class textEncoderClass("TextEncoder", TextEncoderConstructor, [](js::ClassTemplate& tpl)
 {
     tpl.LazyProperty("encoding", EncodingGetter);
 

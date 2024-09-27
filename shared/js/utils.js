@@ -14,17 +14,17 @@ export function waitFor(cb, timeout = 2000) {
     assertIsType(cb, "function", "Expected a function as first argument");
     assertIsType(timeout, "number", "Expected a number or undefined as second argument");
 
-    const checkUntil = Date.now() + timeout;
+    const checkUntil = alt.getNetTime() + timeout;
     const sourceLocation = cppBindings.getCurrentSourceLocation();
     const source = `resource: ${cppBindings.resourceName} source: ${sourceLocation.fileName}:${sourceLocation.lineNumber}`;
 
     return new Promise((resolve, reject) => {
         alt.Timers.everyTick(function () {
-            if (Date.now() > checkUntil) {
+            if (alt.getNetTime() > checkUntil) {
                 this.destroy();
                 return reject(new Error(`waitFor timed out (limit was ${timeout}ms, ${source})`));
             }
-            
+
             let result;
             try {
                 result = cb();
@@ -95,6 +95,10 @@ export function assertVector3(val, message = "Expected Vector3") {
     return assert(isVector3(val), message);
 }
 
+export function isAsyncFunction(val) {
+    return typeof val == "function" && val.constructor.name === "AsyncFunction";
+}
+
 alt.Utils.AssertionError = AssertionError;
 alt.Utils.assert = assert;
 alt.Utils.assertIsObject = assertIsObject;
@@ -106,6 +110,8 @@ alt.Utils.assertVector3 = assertVector3;
 
 alt.Utils.isVector2 = isVector2;
 alt.Utils.isVector3 = isVector3;
+
+alt.Utils.isAsyncFunction = isAsyncFunction;
 
 export function hash(str) {
     assertIsType(str, "string", "Expected a string as first argument");

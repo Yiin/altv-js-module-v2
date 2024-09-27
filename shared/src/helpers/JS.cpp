@@ -120,13 +120,15 @@ void js::TryCatch::PrintError(bool skipLocation)
     std::string stack = stackTrace.IsEmpty() ? "" : *v8::String::Utf8Value(isolate, stackTrace.ToLocalChecked());
     std::string exceptionStr = *v8::String::Utf8Value(isolate, exception);
 
-    if(!skipLocation) Logger::Error("[JS] Exception caught in resource '" + resource->GetName() + "' in file '" + file + "' at line " + lineStr);
+    if(!skipLocation) Logger::Error("Exception caught in resource '" + resource->GetName() + "' in file '" + file + "' at line " + lineStr);
     if(!exceptionStr.empty() && stack.empty())
     {
-        Logger::Error("[JS]", exceptionStr);
-        Logger::Error("[JS]  ", sourceLine);
+        Logger::Error(exceptionStr);
+        Logger::Error(" ", sourceLine);
     }
-    if(!stack.empty()) Logger::Error("[JS]", stack);
+
+    if(!stack.empty())
+        Logger::Error(stack);
 
     js::Event::EventArgs args;
     args.Set("error", exception);

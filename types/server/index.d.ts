@@ -613,7 +613,7 @@ declare module "@altv/server" {
     }
 
     export abstract class Vehicle extends Entity {
-        readonly neon: altShared.VehicleNeonState;
+        neon: altShared.VehicleNeonState;
         readonly driver?: Player;
         readonly isDestroyed: boolean;
         readonly modKitsCount: number;
@@ -1036,6 +1036,9 @@ declare module "@altv/server" {
         // static readonly all: ReadonlyArray<ConnectionInfo>;
 
         static getByID(id: number): ConnectionInfo | undefined;
+
+        static setFactory(factory: typeof ConnectionInfo): void;
+        static getFactory<T extends ConnectionInfo>(): T;
     }
 
     export namespace Events {

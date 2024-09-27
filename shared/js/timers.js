@@ -38,6 +38,7 @@ class Timer {
     lastTick;
     /** @type {boolean} */
     once;
+
     /** @type {{ fileName: string, lineNumber: number }} */
     location;
 
@@ -66,14 +67,26 @@ class Timer {
         return timers.get(id) || null;
     }
 
+    /**
+     *
+     * @param {number | Timer} idOrHandle
+     */
+    static isValid(idOrHandle) {
+        if (!idOrHandle) return false;
+
+        const id = idOrHandle instanceof Timer ? idOrHandle.id : idOrHandle;
+        return timers.has(id);
+    }
+
     constructor(type, callback, interval, once, args) {
         assertIsType(type, "number", "Expected a number as first argument");
         assertIsType(callback, "function", "Expected a function as second argument");
         assertIsType(interval, "number", "Expected a number as third argument");
+        assertIsType(once, "boolean", "Expected a boolean as fourth argument");
 
         this.interval = interval;
         this.callback = callback.bind(this, ...(Array.isArray(args) ? args : []));
-        this.lastTick = Date.now();
+        this.lastTick = alt.getNetTime();
         this.once = once;
         this.#_type = type;
         this.#_id = Timer.#timerIncrementer++;
@@ -86,21 +99,21 @@ class Timer {
     }
 
     tick() {
-        const now = Date.now();
+        const now = alt.getNetTime();
         if (this.interval === 0 || now - this.lastTick >= this.interval) {
             try {
                 this.callback();
             } catch (e) {
-                alt.logError(`[JS] Exception caught while invoking timer callback`);
+                alt.logError(`Exception caught while invoking timer callback`);
                 alt.logError(e);
 
                 Event.invoke(alt.Enums.CustomEventType.ERROR, { error: e, location: this.location, stack: e.stack }, true);
             }
-            this.lastTick = Date.now();
+            this.lastTick = alt.getNetTime();
 
             const duration = this.lastTick - now;
             if (duration > Timer.#_warningThreshold) {
-                alt.logWarning(`[JS] Timer callback in resource '${cppBindings.resourceName}' (${this.location.fileName}:${this.location.lineNumber}) took ${duration}ms to execute (Threshold: ${Timer.#_warningThreshold}ms)`);
+                alt.logWarning(`Timer callback in resource '${cppBindings.resourceName}' (${this.location.fileName}:${this.location.lineNumber}) took ${duration}ms to execute (Threshold: ${Timer.#_warningThreshold}ms)`);
             }
 
             if (this.once) this.destroy();
@@ -141,9 +154,11 @@ const timeMap = new Map();
 function time(name) {
     const key = typeof name == "string" ? name : "";
 
-    if (timeMap.has(key)) throw new Error(`Benchmark timer ${key} already exists`);
+    if (timeMap.has(key)) {
+        throw new Error(`Benchmark timer ${key} already exists`);
+    }
 
-    timeMap.set(key, Date.now());
+    timeMap.set(key, alt.getNetTime());
 }
 
 /**
@@ -153,9 +168,11 @@ function time(name) {
 function timeEnd(name) {
     const key = typeof name == "string" ? name : "";
 
-    if (!timeMap.has(key)) throw new Error(`Benchmark timer ${key} not found`);
+    if (!timeMap.has(key)) {
+        throw new Error(`Benchmark timer ${key} not found`);
+    }
 
-    const diff = Date.now() - timeMap.get(key);
+    const diff = alt.getNetTime() - timeMap.get(key);
     timeMap.delete(key);
 
     alt.log(`Timer ${key}: ${diff}ms`);
@@ -167,6 +184,7 @@ alt.Timers.EveryTick = EveryTick;
 alt.Timers.NextTick = NextTick;
 
 alt.Timers.getByID = Timer.getByID;
+alt.Timers.isValid = Timer.isValid;
 
 alt.Timers.setInterval = (callback, interval, ...args) => new Interval(callback, interval, ...args);
 alt.Timers.setTimeout = (callback, timeout, ...args) => new Timeout(callback, timeout, ...args);
@@ -201,6 +219,7 @@ globalThis.clearInterval = (interval) => {
         interval.destroy();
     }
 };
+
 globalThis.clearTimeout = (timeout) => {
     if (timeout instanceof Timeout) {
         timeout.destroy();

@@ -4,7 +4,7 @@
 
 void CJavaScriptRuntime::OnFatalError(const char* location, const char* message)
 {
-    js::Logger::Error("[JS] V8 fatal error!", location, message);
+    js::Logger::Error("V8 fatal error!", location, message);
 }
 
 void CJavaScriptRuntime::OnHeapOOM(const char* location, const v8::OOMDetails& details)
@@ -15,7 +15,7 @@ void CJavaScriptRuntime::OnHeapOOM(const char* location, const v8::OOMDetails& d
 
 size_t CJavaScriptRuntime::OnNearHeapLimit(void*, size_t current, size_t initial)
 {
-    js::Logger::Warn("[JS] The remaining V8 heap space is approaching critical levels. Increasing heap limit...");
+    js::Logger::Warn("The remaining V8 heap space is approaching critical levels. Increasing heap limit...");
 
     // Increase the heap limit by 100MB if the heap limit has not exceeded 4GB
     uint64_t currentLimitMb = (current / 1024) / 1024;
@@ -103,7 +103,7 @@ void CJavaScriptRuntime::InitializeImportMetaObject(v8::Local<v8::Context> conte
 
 void CJavaScriptRuntime::MessageListener(v8::Local<v8::Message> message, v8::Local<v8::Value> error)
 {
-    js::Logger::Warn("[JS] V8 message received!", js::CppValue(message->Get()));
+    js::Logger::Warn("V8 message received!", js::CppValue(message->Get()));
 }
 
 void CJavaScriptRuntime::SetupIsolateHandlers()

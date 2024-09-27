@@ -16,7 +16,7 @@ v8::Local<v8::Module> CJavaScriptResource::CompileAndRun(const std::string& path
 
     if(maybeMod.IsEmpty())
     {
-        js::Logger::Error("[JS] Failed to compile file", path);
+        js::Logger::Error("Failed to compile file", path);
         tryCatch.Check(true, true);
         return v8::Local<v8::Module>();
     }
@@ -26,11 +26,11 @@ v8::Local<v8::Module> CJavaScriptResource::CompileAndRun(const std::string& path
 
     if(!InstantiateModule(GetContext(), mod) || tryCatch.HasCaught())
     {
-        js::Logger::Error("[JS] Failed to instantiate file", path);
+        js::Logger::Error("Failed to instantiate file", path);
         if(mod->GetStatus() == v8::Module::kErrored)
         {
             js::Object exceptionObj = mod->GetException().As<v8::Object>();
-            js::Logger::Error("[JS]", exceptionObj.Get<std::string>("message"));
+            js::Logger::Error(exceptionObj.Get<std::string>("message"));
             std::string stack = exceptionObj.Get<std::string>("stack");
             if(!stack.empty()) js::Logger::Error(stack);
         }
@@ -40,11 +40,11 @@ v8::Local<v8::Module> CJavaScriptResource::CompileAndRun(const std::string& path
     v8::MaybeLocal<v8::Value> maybeResult = EvaluateModule(GetContext(), mod);
     if(maybeResult.IsEmpty() || maybeResult.ToLocalChecked().As<v8::Promise>()->State() == v8::Promise::PromiseState::kRejected)
     {
-        js::Logger::Error("[JS] Failed to start file", path);
+        js::Logger::Error("Failed to start file", path);
         if(mod->GetStatus() == v8::Module::kErrored)
         {
             js::Object exceptionObj = mod->GetException().As<v8::Object>();
-            js::Logger::Error("[JS]", exceptionObj.Get<std::string>("message"));
+            js::Logger::Error(exceptionObj.Get<std::string>("message"));
             std::string stack = exceptionObj.Get<std::string>("stack");
             if(!stack.empty()) js::Logger::Error(stack);
         }
@@ -106,7 +106,7 @@ bool CJavaScriptResource::Start()
     if (IsCompatibilityModeEnabled())
     {
         auto resourceName = resource->GetName();
-        js::Logger::Colored << "~y~[JS] Compatibility mode is enabled for resource " << resourceName << js::Logger::Endl;
+        js::Logger::Colored << "~y~Compatibility mode is enabled for resource " << resourceName << js::Logger::Endl;
     }
 
     return true;
