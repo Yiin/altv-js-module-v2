@@ -7,10 +7,10 @@ void CJavaScriptRuntime::OnFatalError(const char* location, const char* message)
     js::Logger::Error("V8 fatal error!", location, message);
 }
 
-void CJavaScriptRuntime::OnHeapOOM(const char* location, bool isHeap)
+void CJavaScriptRuntime::OnHeapOOM(const char* location, const v8::OOMDetails& details)
 {
-    if(!isHeap) return;
-    js::Logger::Error("V8 heap out of memory!", location);
+    if (!details.is_heap_oom) return;
+    js::Logger::Error("[JS] V8 heap out of memory!", location);
 }
 
 size_t CJavaScriptRuntime::OnNearHeapLimit(void*, size_t current, size_t initial)

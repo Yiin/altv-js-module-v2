@@ -57,7 +57,7 @@ bool CNodeResource::Start()
     uv_loop_init(uvLoop);
 
     nodeData = node::CreateIsolateData(isolate, uvLoop, CNodeRuntime::Instance().GetPlatform());
-    if(!nodeData) return false;
+    if (!nodeData) return false;
     std::vector<std::string> argv = { "altv-resource" };
     node::EnvironmentFlags::Flags flags = (node::EnvironmentFlags::Flags)(node::EnvironmentFlags::kOwnsProcessState & node::EnvironmentFlags::kNoCreateInspector);
     env = node::CreateEnvironment(nodeData, _context, argv, argv, flags);
@@ -65,7 +65,7 @@ bool CNodeResource::Start()
     IResource::InitializeBindings(js::Binding::Scope::SERVER, js::Module::Get("@altv/server"));
 
     const js::Binding& bootstrapper = js::Binding::Get("server/bootstrap.js");
-    if(!bootstrapper.IsValid()) return false;
+    if (!bootstrapper.IsValid()) return false;
 
     js::TemporaryGlobalExtension altModuleExtension(_context, "__altModule", js::Module::Get("@altv/server").GetNamespace(this));
     js::TemporaryGlobalExtension cppBindingsExtension(_context, "__cppBindings", js::Module::Get("cppBindings").GetNamespace(this));
@@ -75,7 +75,7 @@ bool CNodeResource::Start()
     asyncResource.Reset(isolate, v8::Object::New(isolate));
     asyncContext = node::EmitAsyncInit(isolate, asyncResource.Get(isolate), "CNodeResource");
 
-    while(!envStarted && !startError)
+    while (!envStarted && !startError)
     {
         CNodeRuntime::Instance().OnTick();
         OnTick();

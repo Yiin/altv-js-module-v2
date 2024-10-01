@@ -201,15 +201,18 @@ v8::Local<v8::Module> IModuleHandler::CompileSyntheticModule(const std::string& 
 
     IModuleHandler::PersistentSyntheticModuleExports persistentExports;
     std::vector<v8::Local<v8::String>> exportKeys;
+
     exportKeys.reserve(exports.size());
     persistentExports.reserve(exports.size());
+
     for(const auto& [key, value] : exports)
     {
         exportKeys.push_back(js::JSValue(key));
         persistentExports.insert({ key, js::Persistent<v8::Value>(isolate, value) });
     }
 
-    v8::Local<v8::Module> module = v8::Module::CreateSyntheticModule(isolate, js::JSValue(name), exportKeys, SyntheticModuleEvaluateCallback);
+    v8::MemorySpan<const v8::Local<v8::String>> values(exportKeys.data(), exportKeys.size());
+    v8::Local<v8::Module> module = v8::Module::CreateSyntheticModule(isolate, js::JSValue(name), values, SyntheticModuleEvaluateCallback);
 
     syntheticModuleExports.insert({ module->GetIdentityHash(), persistentExports });
     return module;

@@ -1,7 +1,9 @@
 const bindings = internalRequire("internal/test/binding");
-const { esmLoader } = require("internal/process/esm_loader");
-const { translators } = require("internal/modules/esm/translators");
+const { getOrInitializeCascadedLoader } = internalRequire("internal/modules/esm/loader");
+const { defaultLoad, defaultLoadSync } = internalRequire("internal/modules/esm/load");
+const { translators } = internalRequire("internal/modules/esm/translators");
 const { ModuleWrap } = bindings.internalBinding("module_wrap");
+
 const path = require("path");
 const dns = require("dns");
 const url = require("url");
@@ -19,7 +21,7 @@ const cppBindings = __cppBindings;
         const resource = alt.Resource.current;
         const _path = path.resolve(resource.path, resource.main);
         const pathStr = url.pathToFileURL(_path).toString();
-        _exports = await esmLoader.import(pathStr, "", {});
+        _exports = await getOrInitializeCascadedLoader().import(pathStr, "", {});
     } catch (e) {
         if ((e?.message ?? "").includes("No such module was linked: alt")) {
             alt.logError("Did you forget to enable v1 compatibility? https://go.altv.mp/jsv2-compat");
@@ -46,7 +48,6 @@ function setup() {
 
 // Sets up our custom way of importing alt:V resources
 function setupImports() {
-    const altModuleImportPrefix = "@altv";
     const altResourceImportPrefix = "@resource";
     const altModuleInternalPrefix = "altmodule";
     const altResourceInternalPrefix = "altresource";
@@ -54,26 +55,31 @@ function setupImports() {
     translators.set(altResourceInternalPrefix, async function (url) {
         const name = url.slice(altResourceInternalPrefix.length + 1); // Remove prefix
         const exports = alt.Resource.get(name).exports;
+
         return new ModuleWrap(url, undefined, Object.keys(exports), function () {
             for (const exportName in exports) {
                 let value;
                 try {
                     value = exports[exportName];
                 } catch {}
+
                 this.setExport(exportName, value);
             }
         });
     });
+
     translators.set(altModuleInternalPrefix, async function (url) {
         const name = url.slice(altModuleInternalPrefix.length + 1); // Remove prefix
         const exports = cppBindings.getBuiltinModule(name);
         const exportKeys = Object.keys(exports);
+
         return new ModuleWrap(url, undefined, exportKeys, function () {
             for (const exportName in exports) {
                 let value;
                 try {
                     value = exports[exportName];
                 } catch {}
+
                 this.setExport(exportName, value);
             }
         });
@@ -82,46 +88,86 @@ function setupImports() {
     const _warningPackages = {
         "node-fetch": "Console hangs"
     };
-    const customLoaders = [
-        {
-            exports: {
-                resolve(specifier, context, defaultResolve) {
-                    if (specifier.startsWith(`${altResourceImportPrefix}/`))
-                        return {
-                            url: `${altResourceInternalPrefix}:${specifier.slice(altResourceImportPrefix.length + 1)}`,
-                            shortCircuit: true
-                        };
 
-                    if (cppBindings.getBuiltinModule(specifier) !== null)
-                        return {
-                            url: `${altModuleInternalPrefix}:${specifier}`,
-                            shortCircuit: true
-                        };
+    const defaultLoader = getOrInitializeCascadedLoader();
 
-                    if (_warningPackages.hasOwnProperty(specifier)) alt.logWarning(`Using the module "${specifier}" can cause problems. Reason: ${_warningPackages[specifier]}`);
-                    return defaultResolve(specifier, context, defaultResolve);
-                },
-                load(url, context, defaultLoad) {
-                    if (url.startsWith(`${altResourceInternalPrefix}:`))
-                        return {
-                            format: "altresource",
-                            source: null,
-                            shortCircuit: true
-                        };
+    const customLoader = {
+        resolve(specifier, context, importAttributes) {
+            if (specifier.startsWith(`${altResourceImportPrefix}/`))
+                return {
+                    url: `${altResourceInternalPrefix}:${specifier.slice(altResourceImportPrefix.length + 1)}`,
+                    shortCircuit: true
+                };
 
-                    if (url.startsWith(`${altModuleInternalPrefix}:`)) {
-                        return {
-                            format: "altmodule",
-                            source: null,
-                            shortCircuit: true
-                        };
-                    }
-                    return defaultLoad(url, context, defaultLoad);
-                }
-            }
+            if (cppBindings.getBuiltinModule(specifier) !== null)
+                return {
+                    url: `${altModuleInternalPrefix}:${specifier}`,
+                    shortCircuit: true
+                };
+
+            if (_warningPackages.hasOwnProperty(specifier)) alt.logWarning(`Using the module "${specifier}" can cause problems. Reason: ${_warningPackages[specifier]}`);
+            return defaultLoader.defaultResolve(specifier, context, importAttributes);
+        },
+
+        resolveSync(specifier, context, importAttributes) {
+            if (specifier.startsWith(`${altResourceImportPrefix}/`))
+                return {
+                    url: `${altResourceInternalPrefix}:${specifier.slice(altResourceImportPrefix.length + 1)}`,
+                    shortCircuit: true
+                };
+
+            if (cppBindings.getBuiltinModule(specifier) !== null)
+                return {
+                    url: `${altModuleInternalPrefix}:${specifier}`,
+                    shortCircuit: true
+                };
+
+            if (_warningPackages.hasOwnProperty(specifier)) alt.logWarning(`Using the module "${specifier}" can cause problems. Reason: ${_warningPackages[specifier]}`);
+            return defaultLoader.defaultResolve(specifier, context, importAttributes);
+        },
+
+        load(url, context) {
+            if (url.startsWith(`${altResourceInternalPrefix}:`))
+                return {
+                    format: "altresource",
+                    source: null,
+                    shortCircuit: true,
+                    responseURL: url
+                };
+
+            if (url.startsWith(`${altModuleInternalPrefix}:`))
+                return {
+                    format: "altmodule",
+                    source: null,
+                    shortCircuit: true,
+                    responseURL: url
+                };
+
+            return defaultLoad(url, context);
+        },
+
+        loadSync(url, context, defaultLoad) {
+            if (url.startsWith(`${altResourceInternalPrefix}:`))
+                return {
+                    format: "altresource",
+                    source: null,
+                    shortCircuit: true,
+                    responseURL: url
+                };
+
+            if (url.startsWith(`${altModuleInternalPrefix}:`))
+                return {
+                    format: "altmodule",
+                    source: null,
+                    shortCircuit: true,
+                    responseURL: url
+                };
+
+            return defaultLoadSync(url, context);
         }
-    ];
-    esmLoader.addCustomLoaders(customLoaders);
+    };
+
+    defaultLoader.setCustomizations(customLoader);
 }
 
 // ***** Utils
