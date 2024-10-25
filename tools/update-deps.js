@@ -18,53 +18,56 @@ if (SCOPE !== "client" && SCOPE !== "server" && SCOPE !== "all") {
 const DEBUG = process.argv[3] === "debug";
 
 // Constants
+const V8_VERSION = '12.4.254';
+const NODEJS_VERSION = '22.8.0';
+
 const CDN_URL = "https://cdn.alt-mp.com";
 const CLIENT_FILES = [
     {
         name: "v8_monolith.lib",
         path: "client/deps/v8/lib/Release",
-        urlPath: "deps/v8/{BRANCH}/x64_win32/Release",
+        urlPath: "deps/v8/{V8_VERSION}/x64_win32/Release",
         os: "x64_win32",
     },
     {
         name: "v8_monolith.lib",
         path: "client/deps/v8/lib/Debug",
-        urlPath: "deps/v8/{BRANCH}/x64_win32/Debug",
+        urlPath: "deps/v8/{V8_VERSION}/x64_win32/Debug",
         os: "x64_win32",
         debugOnly: true,
     },
 ];
 const SERVER_FILES = [
     {
-        name: "libnodev2.lib",
+        name: "libnode.lib",
         path: "server/deps/nodejs/lib/Release",
-        urlPath: "deps/nodejs/v2/{BRANCH}/x64_win32/Release",
+        urlPath: "deps/nodejs/{NODEJS_VERSION}/x64_win32/Release",
         os: "x64_win32",
     },
     {
-        name: "libnodev2.dll",
+        name: "libnode.dll",
         path: "server/deps/nodejs/lib/Release",
-        urlPath: "deps/nodejs/v2/{BRANCH}/x64_win32/Release",
+        urlPath: "deps/nodejs/{NODEJS_VERSION}/x64_win32/Release",
         os: "x64_win32",
     },
     {
-        name: "libnodev2.lib",
+        name: "libnode.lib",
         path: "server/deps/nodejs/lib/Debug",
-        urlPath: "deps/nodejs/v2/{BRANCH}/x64_win32/Debug",
+        urlPath: "deps/nodejs/{NODEJS_VERSION}/x64_win32/Debug",
         os: "x64_win32",
         debugOnly: true,
     },
     {
-        name: "libnodev2.dll",
+        name: "libnode.dll",
         path: "server/deps/nodejs/lib/Debug",
-        urlPath: "deps/nodejs/v2/{BRANCH}/x64_win32/Debug",
+        urlPath: "deps/nodejs/{NODEJS_VERSION}/x64_win32/Debug",
         os: "x64_win32",
         debugOnly: true,
     },
     {
-        name: "libnodev2.so",
+        name: "libnode.so",
         path: "server/deps/nodejs/lib",
-        urlPath: "deps/nodejs/v2/{BRANCH}/x64_linux",
+        urlPath: "deps/nodejs/{NODEJS_VERSION}/x64_linux",
         os: "x64_linux",
     },
 ];
@@ -75,7 +78,14 @@ const SERVER_FILES = [
     for (const file of files) {
         if (file.debugOnly && !DEBUG) continue;
         if (file.os !== getOSName()) continue;
-        const fileUrlPath = file.urlPath.replace("{BRANCH}", getGitBranch()).replace("{OS}", getOSName());
+
+        const vars = { V8_VERSION, NODEJS_VERSION, BRANCH: getGitBranch(), OS: getOSName() };
+
+        let fileUrlPath = file.urlPath;
+        for (const key in vars) {
+            fileUrlPath = fileUrlPath.replace(`{${key}}`, vars[key]);
+        }
+
         const url = `${CDN_URL}/${fileUrlPath}/${file.name}`;
         const name = file.nameOverride ? file.nameOverride : file.name;
         const path = pathUtil.resolve(__dirname, "../", file.path, name);
