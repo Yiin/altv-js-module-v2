@@ -50,7 +50,7 @@ jobs:
                   mkdir upload\modules
                   copy build\windows\x64\release\js-module-v2.dll upload\modules
                   copy build\windows\x64\release\js-module-v2.pdb upload\modules
-                  copy server\deps\nodejs\lib\Release\libnodev2.dll upload
+                  copy server\deps\nodejs\lib\Release\libnode.dll upload
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
