@@ -23,6 +23,7 @@ static void Get(js::FunctionContext& ctx)
     modelObj.Set("skillAbove50MaxAmmoMp", info.skillAbove50MaxAmmoMp);
     modelObj.Set("maxSkillMaxAmmoMp", info.maxSkillMaxAmmoMp);
     modelObj.Set("bonusMaxAmmoMp", info.bonusMaxAmmoMp);
+    modelObj.Set("damageType", info.damageType);
 
     ctx.Return(modelObj);
 }
