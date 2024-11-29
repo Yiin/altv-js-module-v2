@@ -99,7 +99,7 @@ jobs:
               run: |
                   mkdir -p upload/modules
                   cp build/linux/x86_64/release/libjs-module-v2.so upload/modules
-                  cp server/deps/nodejs/lib/libnodev2.so upload
+                  cp server/deps/nodejs/lib/libnode.so upload
                   echo ${{ steps.version.outputs.SDK_COMMIT }} >> upload/sdk.version
 
             - name: Upload artifacts
