@@ -2,8 +2,6 @@
 
 # alt:V JS module v2
 
-> NOTE: The v2 module is still a work in progress and not ready for production use.
-
 Repository containing the new JS module v2 module for [alt:V multiplayer](https://altv.mp/).
 
 ## Structure
@@ -25,7 +23,37 @@ If there are any questions or you would like to discuss a feature, contact the _
 
 ## Installing Module
 
-## Installing the Module on the Client
+## As server developer
+
+Create `.altvpkgrc.json` in your server directory (directory where you have altv-server binary):
+```json
+{
+    "loadJSV2Module": true
+}
+```
+
+Use [altv-pkg](https://github.com/altmp/altv-pkg) to install all needed binaries:
+```
+npx altv-pkg release
+```
+
+Create resource with resource.toml containing the following:
+```toml
+type = 'jsv2'
+main = 'server.js'
+client-type = 'jsv2'
+client-main = 'server.js'
+
+# Uncomment if you want to use v1 API (alt-server, alt-client modules)
+# [js-module-v2]
+# compatibilityEnabled = true
+```
+
+## As contributor
+
+### Installing the Module on the Client
+
+**NOTE:** It's only needed if you are contributing or debugging the module, normally it's shipped with alt:V client on release and rc branches
 
 **NOTE:** Client modules are only loaded when you are on the `dev` branch and have `debug` mode enabled.
 
@@ -35,7 +63,7 @@ If there are any questions or you would like to discuss a feature, contact the _
 
 3. Once you start alt:V, a popup will appear, asking whether you want to run unofficial modules. Click "Yes"
 
-## Installing the Module on Your Server
+### Installing the Module on Your Server
 
 **NOTE:** Your server must be on the latest `dev` branch for the module to load correctly.
 
