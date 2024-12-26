@@ -24,6 +24,7 @@ extern js::Class connectionInfoClass("ConnectionInfo", nullptr, nullptr, [](js::
     tpl.LazyProperty<&alt::IConnectionInfo::GetSocialName>("socialClubName");
     tpl.LazyProperty<&alt::IConnectionInfo::GetHwIdHash>("hwidHash");
     tpl.LazyProperty<&alt::IConnectionInfo::GetHwIdExHash>("hwidExHash");
+	tpl.LazyProperty<&alt::IConnectionInfo::GetHwid3>("hwid3");
     tpl.LazyProperty<&alt::IConnectionInfo::GetAuthToken>("authToken");
     tpl.LazyProperty<&alt::IConnectionInfo::GetIsDebug>("debug");
     tpl.LazyProperty<&alt::IConnectionInfo::GetBranch>("branch");
