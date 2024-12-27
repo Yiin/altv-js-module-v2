@@ -326,7 +326,7 @@ jobs:
                   CF_CACHE_PURGE_URL: ${{ secrets.CF_CACHE_PURGE_URL }}
                   BRANCH: ${{ steps.version.outputs.BRANCH }}
                   VERSION: ${{ steps.version.outputs.VERSION }}
-                  SDK_VERSION: ${{ steps.version.outputs.SDK_VERSION }}
+                  SDK_VERSION: ${{ steps.version.outputs.SDK_COMMIT }}
 
             - name: Deploy linux server artifacts to CDN
               run: npx alt-upload dist-server-linux js-module-v2/$BRANCH/x64_linux $VERSION $SDK_VERSION
@@ -340,7 +340,7 @@ jobs:
                   CF_CACHE_PURGE_URL: ${{ secrets.CF_CACHE_PURGE_URL }}
                   BRANCH: ${{ steps.version.outputs.BRANCH }}
                   VERSION: ${{ steps.version.outputs.VERSION }}
-                  SDK_VERSION: ${{ steps.version.outputs.SDK_VERSION }}
+                  SDK_VERSION: ${{ steps.version.outputs.SDK_COMMIT }}
 
     delete-artifacts:
         name: Delete artifacts
