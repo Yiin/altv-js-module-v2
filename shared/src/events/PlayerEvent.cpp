@@ -62,3 +62,12 @@ static js::Event playerStopTalkingEvent(alt::CEvent::Type::PLAYER_STOP_TALKING, 
 
     args.Set("player", e->GetPlayer());
 });
+
+static js::Event playerInteriorChangeEvent(alt::CEvent::Type::PLAYER_CHANGE_INTERIOR_EVENT, [](const alt::CEvent* ev, js::Event::EventArgs& args)
+{
+    auto e = static_cast<const alt::CPlayerChangeInteriorEvent*>(ev);
+
+    args.Set("player", e->GetTarget());
+    args.Set("oldInterior", e->GetOldInteriorLocation());
+    args.Set("newInterior", e->GetNewInteriorLocation());
+});

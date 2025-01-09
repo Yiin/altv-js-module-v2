@@ -40,3 +40,6 @@ registerEventHandler(alt.Enums.EventType.PLAYER_START_TALKING, "playerStartTalki
 registerEventHandler(alt.Enums.EventType.PLAYER_STOP_TALKING, "playerStopTalking", ({ player }) => {
     return [player];
 });
+registerEventHandler(alt.Enums.EventType.PLAYER_CHANGE_INTERIOR_EVENT, "playerInteriorChange", ({ player, oldInterior, newInterior }) => {
+    return [player, oldInterior, newInterior];
+});
