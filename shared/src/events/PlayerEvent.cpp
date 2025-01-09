@@ -71,3 +71,12 @@ static js::Event playerInteriorChangeEvent(alt::CEvent::Type::PLAYER_CHANGE_INTE
     args.Set("oldInterior", e->GetOldInteriorLocation());
     args.Set("newInterior", e->GetNewInteriorLocation());
 });
+
+static js::Event playerDimensionChangeEvent(alt::CEvent::Type::PLAYER_DIMENSION_CHANGE, [](const alt::CEvent* ev, js::Event::EventArgs& args)
+{
+    auto e = static_cast<const alt::CPlayerDimensionChangeEvent*>(ev);
+
+    args.Set("player", e->GetTarget());
+    args.Set("oldDimension", e->GetOldDimension());
+    args.Set("newDimension", e->GetNewDimension());
+});

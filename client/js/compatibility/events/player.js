@@ -43,3 +43,7 @@ registerEventHandler(alt.Enums.EventType.PLAYER_STOP_TALKING, "playerStopTalking
 registerEventHandler(alt.Enums.EventType.PLAYER_CHANGE_INTERIOR_EVENT, "playerInteriorChange", ({ player, oldInterior, newInterior }) => {
     return [player, oldInterior, newInterior];
 });
+
+registerEventHandler(alt.Enums.EventType.PLAYER_DIMENSION_CHANGE, "playerDimensionChange", ({ player, oldDimension, newDimension }) => {
+    return [player, oldDimension, newDimension];
+});

@@ -74,15 +74,6 @@ static js::Event playerRequestControlEvent(alt::CEvent::Type::PLAYER_REQUEST_CON
     args.Set("target", e->GetTarget());
 });
 
-static js::Event playerDimensionChangeEvent(alt::CEvent::Type::PLAYER_DIMENSION_CHANGE, [](const alt::CEvent* ev, js::Event::EventArgs& args)
-{
-    auto e = static_cast<const alt::CPlayerDimensionChangeEvent*>(ev);
-
-    args.Set("player", e->GetTarget());
-    args.Set("oldDimension", e->GetOldDimension());
-    args.Set("newDimension", e->GetNewDimension());
-});
-
 static js::Event playerWeaponChangeEvent(alt::CEvent::Type::PLAYER_WEAPON_CHANGE, [](const alt::CEvent* ev, js::Event::EventArgs& args)
 {
     auto e = static_cast<const alt::CPlayerWeaponChangeEvent*>(ev);
