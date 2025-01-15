@@ -1,0 +1,40 @@
+name: Test changes
+on:
+    push:
+        branches: "**"
+        tags-ignore: "**"
+    pull_request:
+
+jobs:
+    test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                include:
+                    - os: ubuntu-20.04
+                    - os: windows-2022
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              with:
+                  submodules: recursive
+
+            - name: Setup xmake
+              uses: xmake-io/github-action-setup-xmake@v1
+              with:
+                  xmake-version: latest
+
+            - name: Generate xmake project
+              if: runner.os == 'Windows'
+              shell: bash
+              run: xmake config -p windows --toolchain=msvc
+
+            - name: Build server
+              shell: bash
+              run: xmake -b server
+
+            - name: Build client
+              if: runner.os == 'Windows'
+              shell: bash
+              run: xmake -b client
