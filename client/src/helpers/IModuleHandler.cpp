@@ -4,7 +4,7 @@
 #include "CJavaScriptResource.h"
 #include "Module.h"
 #include "Logger.h"
-#include "magic_enum/include/magic_enum.hpp"
+#include "magic_enum/magic_enum.hpp"
 #include "CJavaScriptRuntime.h"
 
 static constexpr const char bytecodeMagic[] = { 'A', 'L', 'T', 'B', 'C' };

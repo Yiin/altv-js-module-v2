@@ -3,4 +3,4 @@
 	url = https://github.com/altmp/cpp-sdk.git
 [submodule "deps/magic_enum"]
 	path = deps/magic_enum
-	url = https://github.com/Neargye/magic_enum.git
+	url = https://github.com/altmp/magic_enum.git

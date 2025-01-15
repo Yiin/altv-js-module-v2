@@ -79,7 +79,7 @@ target("server")
     add_includedirs(
         "server/src", "server/deps", "server/deps/nodejs/include", "server/deps/nodejs/deps/uv/include", "server/deps/nodejs/deps/v8/include",
         "shared/src",
-        "deps", "deps/cpp-sdk",
+        "deps", "deps/cpp-sdk", "deps/magic_enum/include",
         "build"
     )
     add_deps("shared")
@@ -112,7 +112,7 @@ target("client")
     add_includedirs(
         "client/src", "client/deps", "client/deps/v8/include",
         "shared/src",
-        "deps", "deps/cpp-sdk",
+        "deps", "deps/cpp-sdk", "deps/magic_enum/include",
         "build"
     )
     add_deps("shared")

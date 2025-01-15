@@ -1,6 +1,6 @@
 #include "Bindings.h"
 #include "interfaces/IResource.h"
-#include "magic_enum/include/magic_enum.hpp"
+#include "magic_enum/magic_enum.hpp"
 
 static v8::MaybeLocal<v8::Module> ResolveModuleCallback(v8::Local<v8::Context> context, v8::Local<v8::String> specifier, v8::Local<v8::FixedArray> assertions, v8::Local<v8::Module> referrer)
 {

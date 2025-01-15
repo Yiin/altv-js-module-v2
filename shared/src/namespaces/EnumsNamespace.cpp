@@ -1,7 +1,7 @@
 #include "Namespace.h"
 #include "Event.h"
 
-#include "magic_enum/include/magic_enum.hpp"
+#include "magic_enum/magic_enum.hpp"
 #include "cpp-sdk/SDK.h"
 #include "cpp-sdk/events/CKeyboardEvent.h"
 

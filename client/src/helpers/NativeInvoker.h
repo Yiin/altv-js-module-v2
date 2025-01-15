@@ -2,7 +2,7 @@
 
 #include "cpp-sdk/ICore.h"
 #include "helpers/CallContext.h"
-#include "magic_enum/include/magic_enum.hpp"
+#include "magic_enum/magic_enum.hpp"
 
 class CJavaScriptResource;
 

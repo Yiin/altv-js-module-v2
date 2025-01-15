@@ -4,7 +4,7 @@
 
 #include "v8-persistent-handle.h"
 #include "v8-profiler.h"
-#include "magic_enum/include/magic_enum.hpp"
+#include "magic_enum/magic_enum.hpp"
 
 #include "Convert.h"
 #include "Type.h"

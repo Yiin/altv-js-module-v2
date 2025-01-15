@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "interfaces/IResource.h"
 #include "FactoryHandler.h"
-#include "magic_enum/include/magic_enum.hpp"
+#include "magic_enum/magic_enum.hpp"
 
 static void ToggleEvent(js::FunctionContext& ctx)
 {
