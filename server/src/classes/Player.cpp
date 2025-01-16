@@ -950,6 +950,7 @@ extern js::Class playerClass("Player", &sharedPlayerClass, nullptr, [](js::Class
     tpl.Method("getDecorations", GetDecorations);
     tpl.Method<&alt::IPlayer::PlayScenario>("playScenario");
     tpl.Method<&alt::IPlayer::RemoveHeadBlendData>("removeHeadBlendData");
+    tpl.Property<&alt::IPlayer::IsOnVehicle>("isOnVehicle");
 
     tpl.DynamicProperty("localMeta", LocalMetaGetter, LocalMetaSetter, LocalMetaDeleter, LocalMetaEnumerator);
 
