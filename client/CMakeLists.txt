@@ -44,6 +44,7 @@ include_directories(
   ${ALTV_JSV2_DEPS_DIR}/v8/include
   ../shared/src
   ../deps
+  ../deps/magic_enum/include
   ${PROJECT_SOURCE_DIR}/src
 )
 
