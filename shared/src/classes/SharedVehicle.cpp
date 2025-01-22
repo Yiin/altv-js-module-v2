@@ -127,4 +127,17 @@ extern js::Class sharedVehicleClass("SharedVehicle", &entityClass, nullptr, [](j
     tpl.Method<&alt::IVehicle::GetArmoredWindowShootCount>("getArmoredWindowShootCount");
     tpl.Method<&alt::IVehicle::GetBumperDamageLevel>("getBumperDamageLevel");
     tpl.Method<&alt::IVehicle::ToggleExtra>("toggleExtra");
+    
+    tpl.Method<&alt::IVehicle::GetWheelCamber>("getWheelCamber");
+    tpl.Method<&alt::IVehicle::SetWheelCamber>("setWheelCamber");
+    tpl.Method<&alt::IVehicle::GetWheelTrackWidth>("getWheelTrackWidth");
+    tpl.Method<&alt::IVehicle::SetWheelTrackWidth>("setWheelTrackWidth");
+    tpl.Method<&alt::IVehicle::GetWheelHeight>("getWheelHeight");
+    tpl.Method<&alt::IVehicle::SetWheelHeight>("setWheelHeight");
+    tpl.Method<&alt::IVehicle::GetWheelTyreRadius>("getWheelTyreRadius");
+    tpl.Method<&alt::IVehicle::SetWheelTyreRadius>("setWheelTyreRadius");
+    tpl.Method<&alt::IVehicle::GetWheelRimRadius>("getWheelRimRadius");
+    tpl.Method<&alt::IVehicle::SetWheelRimRadius>("setWheelRimRadius");
+    tpl.Method<&alt::IVehicle::GetWheelTyreWidth>("getWheelTyreWidth");
+    tpl.Method<&alt::IVehicle::SetWheelTyreWidth>("setWheelTyreWidth");
 });

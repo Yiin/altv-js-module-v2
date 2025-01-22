@@ -57,18 +57,6 @@ extern js::Class vehicleClass("Vehicle", &sharedVehicleClass, nullptr, [](js::Cl
     tpl.Method<&alt::IVehicle::ResetHandling>("resetHandling");
     tpl.Method<&alt::IVehicle::ReplaceHandling>("replaceHandling");
     tpl.Method<&alt::IVehicle::ToggleTaxiLight>("toggleTaxiLight");
-    tpl.Method<&alt::IVehicle::GetWheelCamber>("getWheelCamber");
-    tpl.Method<&alt::IVehicle::SetWheelCamber>("setWheelCamber");
-    tpl.Method<&alt::IVehicle::GetWheelTrackWidth>("getWheelTrackWidth");
-    tpl.Method<&alt::IVehicle::SetWheelTrackWidth>("setWheelTrackWidth");
-    tpl.Method<&alt::IVehicle::GetWheelHeight>("getWheelHeight");
-    tpl.Method<&alt::IVehicle::SetWheelHeight>("setWheelHeight");
-    tpl.Method<&alt::IVehicle::GetWheelTyreRadius>("getWheelTyreRadius");
-    tpl.Method<&alt::IVehicle::SetWheelTyreRadius>("setWheelTyreRadius");
-    tpl.Method<&alt::IVehicle::GetWheelRimRadius>("getWheelRimRadius");
-    tpl.Method<&alt::IVehicle::SetWheelRimRadius>("setWheelRimRadius");
-    tpl.Method<&alt::IVehicle::GetWheelTyreWidth>("getWheelTyreWidth");
-    tpl.Method<&alt::IVehicle::SetWheelTyreWidth>("setWheelTyreWidth");
     tpl.Method<&alt::IVehicle::GetWheelDynamicFlag>("getWheelDynamicFlag");
     tpl.Method<&alt::IVehicle::SetWheelDynamicFlag>("setWheelDynamicFlag");
     tpl.Method<&alt::IVehicle::GetWheelConfigFlag>("getWheelConfigFlag");
