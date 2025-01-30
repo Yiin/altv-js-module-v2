@@ -53,7 +53,7 @@ jobs:
                   copy server\deps\nodejs\lib\Release\libnode.dll upload
 
             - name: Upload artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: server-windows
                   path: ./upload
@@ -103,7 +103,7 @@ jobs:
                   echo ${{ steps.version.outputs.SDK_COMMIT }} >> upload/sdk.version
 
             - name: Upload artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: server-linux
                   path: ./upload
@@ -151,7 +151,7 @@ jobs:
                   copy build\windows\x64\release\js-client-v2.pdb upload\modules
 
             - name: Upload artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: client-windows
                   path: ./upload
@@ -170,7 +170,7 @@ jobs:
                   xcopy types upload /E
 
             - name: Upload artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: typings
                   path: ./upload
@@ -181,25 +181,25 @@ jobs:
         needs: [build-server-windows, build-server-linux, build-client-windows, build-typings]
         steps:
             - name: Download windows server artifact
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: server-windows
                   path: dist-server-windows
 
             - name: Download windows client artifact
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: client-windows
                   path: dist-client-windows
 
             - name: Download linux artifacts
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: server-linux
                   path: dist-server-linux
 
             - name: Download typing artifact
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: typings
                   path: dist-typings
@@ -290,13 +290,13 @@ jobs:
                   key: ${{ runner.os }}
 
             - name: Download windows server artifact
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: server-windows
                   path: dist-server-windows
 
             - name: Download linux artifacts
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: server-linux
                   path: dist-server-linux
