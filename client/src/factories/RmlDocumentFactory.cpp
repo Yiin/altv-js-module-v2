@@ -3,11 +3,15 @@
 
 // clang-format off
 static js::FactoryHandler rmlDocumentFactory(alt::IBaseObject::Type::RML_DOCUMENT, [](js::Object& args) -> alt::IBaseObject* {
-    std::string url;
-    if(!args.Get("url", url)) return nullptr;
+    alt::IRmlDocument::CreateOptions options;
+
+    if(!args.Get("url", options.url)) return nullptr;
+    
+    options.isFullscreen = args.Get<bool>("isFullscreen", options.isFullscreen);
+    options.size = args.Get<alt::Vector2i>("size", options.size);
 
     js::IResource* resource = args.GetResource();
-    js::SourceLocation origin = js::SourceLocation::GetCurrent(resource);
+    options.currentPath = js::SourceLocation::GetCurrent(resource).file;
 
-    return alt::ICore::Instance().CreateDocument(url, origin.file, resource->GetResource());
+    return alt::ICore::Instance().CreateDocument(options, resource->GetResource());
 });
