@@ -1986,7 +1986,7 @@ declare module "@altv/client" {
 
         interface ColShapeEventParameters {
             entity: WorldObject;
-            target: ColShape;
+            colShape: ColShape;
             state: boolean;
         }
 

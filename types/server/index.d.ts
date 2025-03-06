@@ -1340,7 +1340,7 @@ declare module "@altv/server" {
 
         interface ColShapeEventParameters {
             entity: WorldObject;
-            target: ColShape;
+            colShape: ColShape;
             state: boolean;
         }
 
