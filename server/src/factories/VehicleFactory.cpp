@@ -10,6 +10,7 @@ static js::FactoryHandler vehicleFactory(alt::IBaseObject::Type::VEHICLE, [](js:
 
     alt::Vector3f rot = args.Get<alt::Vector3f>("rot", {0, 0, 0});
     uint32_t streamingDistance = args.Get<uint32_t>("streamingDistance", 0);
+    bool isStatic = args.Get<bool>("isStatic", false);
 
-    return alt::ICore::Instance().CreateVehicle(model, pos, rot, streamingDistance);
+    return alt::ICore::Instance().CreateVehicle(model, pos, rot, streamingDistance, isStatic);
 });
