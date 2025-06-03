@@ -8,7 +8,7 @@ static js::Event playerAnimationChangeEvent(alt::CEvent::Type::PLAYER_CHANGE_ANI
     args.Set("player", e->GetTarget());
     args.Set("oldAnimDict", e->GetOldAnimationDict());
     args.Set("newAnimDict", e->GetNewAnimationDict());
-    args.Set("oldAnimName", e->GetNewAnimationName());
+    args.Set("oldAnimName", e->GetOldAnimationName());
     args.Set("newAnimName", e->GetNewAnimationName());
 });
 
