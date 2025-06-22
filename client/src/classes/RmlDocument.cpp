@@ -54,6 +54,7 @@ extern js::Class rmlDocumentClass("RmlDocument", &rmlElementClass, nullptr, [](j
     tpl.Property<&alt::IRmlDocument::GetSourceUrl>("sourceUrl");
     tpl.Property<&alt::IRmlDocument::IsVisible>("isVisible");
     tpl.Property<&alt::IRmlDocument::IsModal>("isModal");
+    tpl.Property<&alt::IRmlDocument::IsFullscreen>("isFullscreen");
     tpl.Property<&alt::IRmlDocument::GetBody>("body");
 
     tpl.Method("show", Show);

@@ -1,6 +1,6 @@
 [submodule "deps/cpp-sdk"]
 	path = deps/cpp-sdk
-	url = https://github.com/altmp/cpp-sdk.git
+	url = git@github.com:altmp/cpp-sdk.git
 [submodule "deps/magic_enum"]
 	path = deps/magic_enum
-	url = https://github.com/altmp/magic_enum.git
+	url = git@github.com:altmp/magic_enum.git

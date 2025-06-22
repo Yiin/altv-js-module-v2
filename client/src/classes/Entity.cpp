@@ -60,4 +60,5 @@ extern js::Class entityClass("Entity", &sharedEntityClass, nullptr, [](js::Class
     tpl.Method("getSyncInfo", GetSyncInfo);
 
     tpl.StaticFunction("getByScriptID", &GetByScriptID);
+    tpl.Property<&alt::IEntity::IsStaticEntity>("static");
 });

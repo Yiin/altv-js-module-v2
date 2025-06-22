@@ -60,7 +60,7 @@ jobs:
 
     build-server-linux:
         name: Build linux server
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
@@ -177,7 +177,7 @@ jobs:
 
     release:
         name: Upload files to GitHub release
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         needs: [build-server-windows, build-server-linux, build-client-windows, build-typings]
         steps:
             - name: Download windows server artifact
@@ -275,7 +275,7 @@ jobs:
 
     deploy-cdn:
         name: Deploy to CDN
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         needs: [build-server-windows, build-server-linux, build-client-windows, build-typings]
         steps:
             - name: Set up Node.js
@@ -344,7 +344,7 @@ jobs:
 
     delete-artifacts:
         name: Delete artifacts
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         needs: [release, deploy-cdn]
         if: ${{ always() }}
         steps:
